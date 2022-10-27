@@ -4,7 +4,7 @@ import {
     PieChart,
     Package,
     Layers,
-    Home
+    Home,
 } from "react-feather";
 
 const asideMenus = [

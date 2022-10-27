@@ -4,7 +4,9 @@
 /node_modules
 /.pnp
 .pnp.js
+.cache
 .eslintcache
+.rollup.cache
 
 # testing
 /coverage
@@ -21,9 +23,7 @@
 .env.test.local
 .env.production.local
 
+*.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-.idea/
-/.idea

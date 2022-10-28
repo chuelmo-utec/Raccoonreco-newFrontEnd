@@ -27,10 +27,6 @@ interface IProps {
 const Header = ({ hasSidebar, sidebarLayout }: IProps) => {
     const dispatch = useAppDispatch();
     const { sidebar, isBody } = useAppSelector((state) => state.ui);
-    const [searchOpen, setSearchOpen] = useState(false);
-    const searchHandler = useCallback(() => {
-        setSearchOpen((prev) => !prev);
-    }, []);
 
     const [menuOpen, setMenuOpen] = useState(false);
     const sidebarHandler = useCallback(

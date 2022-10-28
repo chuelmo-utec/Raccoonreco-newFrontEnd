@@ -49,6 +49,10 @@ const UserForm = () => {
                 onError: (err: AxiosError) => {
                     if (err.response && err.response.status === 401) {
                         setConfirmationOpen(true);
+                    } else if (err.response && err.response.status === 400) {
+                        setError(
+                            "Ocurrió un error, ya existe un usuario con ese email"
+                        );
                     } else {
                         setError("Ocurrió un error, intente más tarde.");
                     }

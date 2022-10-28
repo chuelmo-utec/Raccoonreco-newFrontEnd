@@ -11,7 +11,6 @@ import {
 } from "@doar/components";
 import { StyledClose, StyledTitle, StyledText } from "./style";
 import { useForm } from "react-hook-form";
-import { IPartnerForm } from "../../@types/partners";
 import { hasKey } from "@doar/shared/methods";
 import useFullRefreshToken from "../../hooks/token/useFullRefreshToken";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,7 +35,6 @@ const ModalConfirmationPassword = ({ show, onClose }: IProps) => {
     } = useForm<{ password: string }>();
 
     const onSave = (data: { password: string }) => {
-        console.log("password", data);
         fullRefreshToken.mutate(
             {
                 password: data.password,

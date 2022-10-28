@@ -5,7 +5,6 @@ import { PrivateRoute } from "./PrivateRoute";
 
 // Classic Pages
 const SignIn = lazy(() => import("./pages/signin"));
-const SignUp = lazy(() => import("./pages/signup"));
 
 const ErrorNotFound = lazy(() => import("./pages/error-404"));
 const Error500 = lazy(() => import("./pages/error-500"));
@@ -14,10 +13,13 @@ const Error505 = lazy(() => import("./pages/error-505"));
 
 // Classic Plus Pages
 
-const Home = lazy(() => import("./pages/classic-plus/dashboard-one"));
-const Users = lazy(() => import("./pages/classic-plus/users"));
-const Partners = lazy(() => import("./pages/classic-plus/partners"));
-const CreatePartner = lazy(() => import("./pages/classic-plus/createPartner"));
+const Home = lazy(() => import("./pages/classic-plus/Home"));
+
+const Partners = lazy(() => import("./pages/classic-plus/Partners"));
+const CreatePartner = lazy(() => import("./pages/classic-plus/CreatePartner"));
+
+const Users = lazy(() => import("./pages/classic-plus/Users"));
+const CreateUser = lazy(() => import("./pages/classic-plus/CreateUser"));
 
 const ClassicPlusProfileView = lazy(
     () => import("./pages/classic-plus/profile-view")
@@ -69,10 +71,18 @@ const App = () => {
                                 />
                             }
                         />
+                        <Route
+                            path="/users/create"
+                            element={
+                                <PrivateRoute
+                                    component={CreateUser}
+                                    roles={["Admin"]}
+                                />
+                            }
+                        />
 
                         {/* Authentication Routes */}
                         <Route path="/signin" element={<SignIn />} />
-                        <Route path="/signup" element={<SignUp />} />
 
                         {/* Error Routes */}
                         <Route path="/error-500" element={<Error500 />} />

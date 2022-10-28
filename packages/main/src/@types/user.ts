@@ -7,6 +7,13 @@ export type IUser = {
     rol: IUserRole;
 };
 
+export type IUserForm = {
+    email: string;
+    name: string;
+    password: string;
+    rol: IUserRole;
+};
+
 export type IUserLogin = {
     email: string;
     password: string;

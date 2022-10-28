@@ -6,7 +6,7 @@ import WelcomeArea from "../../containers/dashboard-one/welcome-area";
 import RowThree from "../../containers/dashboard-one/row-three";
 import SEO from "../../components/seo";
 
-const DashboardOne = () => {
+const Home = () => {
     return (
         <Layout>
             <SEO
@@ -30,4 +30,4 @@ const DashboardOne = () => {
     );
 };
 
-export default DashboardOne;
+export default Home;

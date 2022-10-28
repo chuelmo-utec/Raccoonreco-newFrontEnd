@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { FormGroup, Label, Input, Button, Alert } from "@doar/components";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { hasKey } from "@doar/shared/methods";
-import { StyledWrap, StyledTitle, StyledDesc, StyledLabelWrap } from "./style";
-import { IAuth, IUserLogin } from "../../@types/user";
+import { StyledWrap } from "./style";
+import { IAuth } from "../../@types/user";
 import { selectAuth } from "../../redux/slices/auth";
 import { IPartnerForm } from "../../@types/partners";
 import useCreatePartner from "../../hooks/partners/useCreatePartner";
@@ -23,6 +23,12 @@ const PartnerForm = () => {
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
     const accessToken = useSelector(selectAuth) as IAuth;
 
+    useEffect(() => {
+        return () => {
+            setError(null);
+        };
+    }, []);
+
     const onSubmit: SubmitHandler<IPartnerForm> = (partner) => {
         console.log(partner);
         createPartnerMutation.mutate(
@@ -31,12 +37,14 @@ const PartnerForm = () => {
                 accessToken: accessToken.access_token,
             },
             {
-                onSuccess: (response) => {
+                onSuccess: () => {
                     reset();
                 },
                 onError: (err: AxiosError) => {
                     if (err.response && err.response.status === 401) {
                         setConfirmationOpen(true);
+                    } else {
+                        setError("Ocurrió un error, intente más tarde.");
                     }
                     console.log("aca error", err);
                 },
@@ -46,10 +54,12 @@ const PartnerForm = () => {
 
     return (
         <StyledWrap>
-            <ModalConfirmationPassword
-                onClose={() => setConfirmationOpen(false)}
-                show={confirmationOpen}
-            />
+            {confirmationOpen && (
+                <ModalConfirmationPassword
+                    onClose={() => setConfirmationOpen(false)}
+                    show={confirmationOpen}
+                />
+            )}
             {error && (
                 <Alert color="danger" variant="outlined">
                     {error}

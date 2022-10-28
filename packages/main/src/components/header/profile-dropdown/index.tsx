@@ -1,11 +1,4 @@
-import {
-    Edit3,
-    User,
-    HelpCircle,
-    LifeBuoy,
-    Settings,
-    LogOut,
-} from "react-feather";
+import { User, LogOut } from "react-feather";
 import {
     DropdownToggle,
     Dropdown,

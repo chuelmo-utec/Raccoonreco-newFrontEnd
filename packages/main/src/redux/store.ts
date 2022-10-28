@@ -16,7 +16,7 @@ import themeReducer from "./slices/theme";
 import authReducer from "./slices/auth";
 
 const persistConfig = {
-    key: "doar",
+    key: "raccoons",
     version: 1.1,
     blacklist: ["ui"],
     storage,

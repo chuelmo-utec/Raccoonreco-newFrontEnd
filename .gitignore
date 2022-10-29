@@ -119,3 +119,5 @@ yarn-error.log*
 
 .idea/
 /.idea
+
+lerna-debug.log

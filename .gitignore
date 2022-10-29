@@ -121,3 +121,5 @@ yarn-error.log*
 /.idea
 
 lerna-debug.log
+
+yarn.lock*

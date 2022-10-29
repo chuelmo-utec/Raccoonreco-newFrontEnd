@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { Menu, X, ArrowLeft } from "react-feather";
 import AsideLogo from "../../../components/aside-layout/logo";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { toggleSidebar, toggleBody } from "../../../redux/slices/ui";
+import { toggleSidebar } from "../../../redux/slices/ui";
 import { StyledHeader, StyledMenuBtn, StyledSidebarBtn } from "./style";
 
 interface IProps {
@@ -24,18 +24,13 @@ const Header = ({
     sidebarLayout,
 }: IProps) => {
     const dispatch = useAppDispatch();
-    const { sidebar, isBody } = useAppSelector((state) => state.ui);
+    const { sidebar } = useAppSelector((state) => state.ui);
     const sidebarHandler = useCallback(
         (_: any, isOpen?: "open") => {
             dispatch(toggleSidebar({ isOpen }));
         },
         [dispatch]
     );
-
-    const bodyHandler = useCallback(() => {
-        dispatch(toggleBody());
-        dispatch(toggleSidebar({ isOpen: "open" }));
-    }, [dispatch]);
 
     const menuHandler = useCallback(() => {
         displayHandler();

@@ -50,7 +50,8 @@ const Nav = ({
                 );
             }
         }
-        return <child.type {...child.props} />;
+        //return <child.type {...child.props} />;
+        return el;
     });
 
     return (

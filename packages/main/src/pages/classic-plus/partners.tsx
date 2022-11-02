@@ -1,6 +1,9 @@
 import {
     Modal,
     ModalBody,
+    ModalTitle,
+    ModalClose,
+    ModalFooter,
     Badge,
     Button,
     Row,
@@ -9,6 +12,10 @@ import {
     InputGroup,
     Input,
     InputGroupAddon,
+    ModalHeader,
+    Checkbox,
+    Col,
+    Radio,
 } from "@doar/components";
 import Layout from "../../layouts/layout";
 import Content from "../../layouts/layout/content";
@@ -27,55 +34,39 @@ import {
     StyledText,
 } from "../../../src/components/token/style";
 import { useState } from "react";
+import { hasKey } from "@doar/shared/methods";
 
 const Partners = () => {
-    const auth = useSelector(selectAuth) as IAuth;
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
-    const clickHandler = (partner: IPartner) => {
+    const auth = useSelector(selectAuth) as IAuth;
+    const [show, setShow] = useState(false);
+    const [showPhoto, setShowPhoto] = useState(false);
+    const [showAttach, setShowAttach] = useState(false);
+    const { data: partners } = usePartners({
+        accessToken: auth.access_token,
+    });
+
+    const closeHandler = () => {
+        setShow((prev) => !prev);
+    };
+    const attachHandler = (button: string) => {
+        if (button === "attach") {
+            setShowAttach(true);
+            setShowPhoto(false);
+        } else if (button === "photo") {
+            setShowPhoto(true);
+            setShowAttach(false);
+        } else {
+            setShowPhoto(false);
+            setShowAttach(false);
+        }
+    };
+    const clickHandler = (partner: IPartner): void => {
         const authorized = partner.authorized;
 
         const document = partner.document;
         console.log(document, authorized);
-
-        return (
-            <Modal
-                show={confirmationOpen}
-                onClose={() => setConfirmationOpen(true)}
-            >
-                <ModalBody p={["20px", "30px"]}>
-                    <StyledClose onClose={() => setConfirmationOpen(true)}>
-                        <X size={20} />
-                    </StyledClose>
-                    <StyledTitle>Solicitar Permiso</StyledTitle>
-                    <StyledText>
-                        Ingresa tu contraseña para confirmar que sos tú.
-                    </StyledText>
-                    <form action="#" noValidate>
-                        <InputGroup mb="5px">
-                            <Input
-                                type="password"
-                                id="password"
-                                placeholder="Contraseña"
-                                name="eee"
-                            />
-                            <InputGroupAddon>
-                                <Button
-                                    type="submit"
-                                    variant="outlined"
-                                    color="light"
-                                >
-                                    Confirmar
-                                </Button>
-                            </InputGroupAddon>
-                        </InputGroup>
-                    </form>
-                </ModalBody>
-            </Modal>
-        );
     };
-    const { data: partners } = usePartners({
-        accessToken: auth.access_token,
-    });
 
     return (
         <Layout>
@@ -132,6 +123,7 @@ const Partners = () => {
                                                 iconButton={true}
                                                 onClick={() => {
                                                     clickHandler(partner);
+                                                    closeHandler();
                                                 }}
                                             >
                                                 <Edit size={12}></Edit>
@@ -144,6 +136,119 @@ const Partners = () => {
                     </Row>
                 </ContentBody>
             </Content>
+            <Modal
+                show={show}
+                onClose={closeHandler}
+                size={"md"}
+                centered={true}
+            >
+                <ModalHeader>
+                    <ModalTitle>Editar Socio</ModalTitle>
+                    <br />
+                </ModalHeader>
+                <ModalBody>
+                    <form
+                        action="#"
+                        onSubmit={() => {
+                            console.log("llamar a endpoint");
+                        }}
+                        noValidate
+                    >
+                        <InputGroup mb="12px">
+                            <Input
+                                type="string"
+                                id="nombre"
+                                placeholder="Nombre"
+                                name="nombre"
+                            />
+                        </InputGroup>
+                        <InputGroup mb="12px">
+                            <Input
+                                type="string"
+                                id="documento"
+                                placeholder="Documento"
+                                name="documento"
+                            />
+                        </InputGroup>
+                        <InputGroup mb="12px">
+                            <Input
+                                type="text"
+                                id="numeroContacto"
+                                placeholder="Numero de Contacto"
+                                name="numeroContacto"
+                            />
+                        </InputGroup>
+                        <InputGroup mb="12px">
+                            <Checkbox
+                                label="Autorizado"
+                                id="autorizado"
+                                name="autorizado"
+                            ></Checkbox>
+                        </InputGroup>
+
+                        <Row>
+                            <Col col>
+                                <Radio
+                                    onClick={(value) => {
+                                        console.log(value.currentTarget.id);
+                                        attachHandler(value.currentTarget.id);
+                                    }}
+                                    id="attach"
+                                    name="customRadio"
+                                    label="Subir foto"
+                                />
+                            </Col>
+                            <Col col>
+                                <Radio
+                                    onClick={(value) => {
+                                        attachHandler(value.currentTarget.id);
+                                        console.log(value.currentTarget.id);
+                                    }}
+                                    id="photo"
+                                    name="customRadio"
+                                    label="Tomar foto"
+                                />
+                            </Col>
+                        </Row>
+
+                        {showPhoto && (
+                            <InputGroup mb="12px">
+                                <Input
+                                    type="file"
+                                    id="attach"
+                                    placeholder="Subir foto"
+                                    name="attach"
+                                />
+                            </InputGroup>
+                        )}
+
+                        {showAttach && (
+                            <InputGroup mb="12px">
+                                <Input
+                                    type="text"
+                                    id="attach"
+                                    placeholder="Subir foto"
+                                    name="attach"
+                                />
+                            </InputGroup>
+                        )}
+                    </form>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="secondary" onClick={closeHandler}>
+                        Close
+                    </Button>
+                    <Button
+                        color="primary"
+                        onClick={() => {
+                            console.log("llamar a endpoint");
+                        }}
+                    >
+                        {" "}
+                        Save changes
+                    </Button>
+                </ModalFooter>
+            </Modal>
         </Layout>
     );
 };

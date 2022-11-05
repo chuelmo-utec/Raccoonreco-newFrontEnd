@@ -108,7 +108,7 @@ const EditModal = ({ show, onClose, partner }: IProps) => {
                 <StyledClose onClose={onClose}>
                     <X size={20} />
                 </StyledClose>
-                <StyledTitle>Editar Usuario</StyledTitle>
+                <StyledTitle>Editar Socio</StyledTitle>
                 {error && (
                     <Alert color="danger" variant="outlined">
                         {error}

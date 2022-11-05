@@ -19,7 +19,7 @@ interface IAvatar extends LayoutProps, SpaceProps {
      */
     shape?: "circle" | "rounded" | "square";
     /**
-     * An avatar can have a status indicator to indicate users availability.
+     * An avatar can have a status indicator to indicate user-form availability.
      */
     status?: "online" | "offline";
 }

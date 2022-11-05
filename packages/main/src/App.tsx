@@ -12,7 +12,6 @@ const Error503 = lazy(() => import("./pages/error-503"));
 const Error505 = lazy(() => import("./pages/error-505"));
 
 // Classic Plus Pages
-
 const Home = lazy(() => import("./pages/classic-plus/Home"));
 
 const Partners = lazy(() => import("./pages/classic-plus/Partners"));
@@ -21,9 +20,7 @@ const CreatePartner = lazy(() => import("./pages/classic-plus/CreatePartner"));
 const Users = lazy(() => import("./pages/classic-plus/Users"));
 const CreateUser = lazy(() => import("./pages/classic-plus/CreateUser"));
 
-const ClassicPlusProfileView = lazy(
-    () => import("./pages/classic-plus/profile-view")
-);
+const PartnerDetail = lazy(() => import("./pages/classic-plus/PartnerDetail"));
 
 const App = () => {
     return (
@@ -71,6 +68,7 @@ const App = () => {
                                 />
                             }
                         />
+
                         <Route
                             path="/users/create"
                             element={
@@ -95,8 +93,8 @@ const App = () => {
 
                         {/* User Routes */}
                         <Route
-                            path="/classic-plus/profile-view"
-                            element={<ClassicPlusProfileView />}
+                            path="/partners/detail"
+                            element={<PartnerDetail />}
                         />
 
                         {/* 404 Page Route */}

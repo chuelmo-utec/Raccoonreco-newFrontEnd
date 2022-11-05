@@ -4,7 +4,7 @@ import Content from "../../layouts/layout/content";
 import ContentBody from "../../layouts/layout/content-body";
 import WelcomeArea from "../../containers/dashboard-one/welcome-area";
 import SEO from "../../components/seo";
-import PartnerForm from "../../components/partners";
+import PartnerForm from "../../components/partner-form";
 
 const CreatePartner = () => {
     return (

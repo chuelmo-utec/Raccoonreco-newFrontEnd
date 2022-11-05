@@ -49,7 +49,7 @@ const ModalConfirmationPassword = ({ show, onClose }: IProps) => {
                     if (err.response && err.response.status === 401) {
                         setError("Contraseña incorrecta");
                     } else {
-                        setError("Ocurrió un error, intente máss trde");
+                        setError("Ocurrió un error, intente más tarde");
                     }
                 },
             }

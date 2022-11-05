@@ -7,11 +7,7 @@ import Interests from "../../../components/profile-view/interests";
 const Main = () => {
     return (
         <>
-            <UpdateOption />
             <LatestActivity />
-            <WorkExperience />
-            <Education />
-            <Interests />
         </>
     );
 };

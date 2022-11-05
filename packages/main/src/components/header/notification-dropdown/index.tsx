@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Bell } from "react-feather";
 import { DropdownToggle, Dropdown } from "@doar/components";
 import Notification from "../dropdown-item";
@@ -5,6 +6,7 @@ import {
     StyledDropMenu,
     StyledDropHeader,
     StyledDropItem,
+    StyledDropFooter,
     StyledBadge,
 } from "../header-dropdown-elements";
 

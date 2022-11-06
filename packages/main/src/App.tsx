@@ -16,6 +16,9 @@ const Home = lazy(() => import("./pages/classic-plus/Home"));
 
 const Partners = lazy(() => import("./pages/classic-plus/Partners"));
 const CreatePartner = lazy(() => import("./pages/classic-plus/CreatePartner"));
+const RecognizePartners = lazy(
+    () => import("./pages/classic-plus/RecognizePartner")
+);
 
 const Users = lazy(() => import("./pages/classic-plus/Users"));
 const CreateUser = lazy(() => import("./pages/classic-plus/CreateUser"));
@@ -46,6 +49,15 @@ const App = () => {
                             element={
                                 <PrivateRoute
                                     component={Users}
+                                    roles={["Admin", "User"]}
+                                />
+                            }
+                        />
+                        <Route
+                            path="/partners/recognize"
+                            element={
+                                <PrivateRoute
+                                    component={RecognizePartners}
                                     roles={["Admin", "User"]}
                                 />
                             }

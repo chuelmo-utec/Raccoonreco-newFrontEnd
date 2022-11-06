@@ -102,7 +102,11 @@ const Users = () => {
                                         <td>{user.email}</td>
                                         <td>{user.rol}</td>
                                         {currentUser.rol === "Admin" && (
-                                            <td>
+                                            <td
+                                                style={{
+                                                    textAlign: "center",
+                                                }}
+                                            >
                                                 <Button
                                                     color="primary"
                                                     onClick={() => {
@@ -114,7 +118,11 @@ const Users = () => {
                                             </td>
                                         )}
                                         {currentUser.rol === "Admin" && (
-                                            <td>
+                                            <td
+                                                style={{
+                                                    textAlign: "center",
+                                                }}
+                                            >
                                                 <Button
                                                     color="primary"
                                                     onClick={() => {

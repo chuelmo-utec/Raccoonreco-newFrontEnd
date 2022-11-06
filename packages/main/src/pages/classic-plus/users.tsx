@@ -8,12 +8,21 @@ import useUsers from "../../hooks/users/useUsers";
 import { useSelector } from "react-redux";
 import { selectAuth, selectCurrentUser } from "../../redux/slices/auth";
 import { IAuth, IUser } from "../../@types/user";
-import { Edit } from "react-feather";
+import { Edit, X } from "react-feather";
 import EditUserModal from "../../components/edituser-modal/EditUser-Modal";
 import { useState } from "react";
+import DeleteUserModal from "../../components/deleteuser-modal/DeleteUser-Modal";
 
 const Users = () => {
     const [openEditModal, setOpenEditModal] = useState<{
+        open: boolean;
+        user: IUser | undefined;
+    }>({
+        open: false,
+        user: undefined,
+    });
+
+    const [openRemoveModal, setOpenRemoveModal] = useState<{
         open: boolean;
         user: IUser | undefined;
     }>({
@@ -26,7 +35,7 @@ const Users = () => {
         accessToken: auth.access_token,
     });
 
-    const modalHandler = (user?: IUser) => {
+    const modalHandlerEdit = (user?: IUser) => {
         if (user) {
             setOpenEditModal({ open: true, user: user });
         } else {
@@ -34,6 +43,13 @@ const Users = () => {
         }
     };
 
+    const modalHandlerDelete = (user?: IUser) => {
+        if (user) {
+            setOpenRemoveModal({ open: true, user: user });
+        } else {
+            setOpenRemoveModal({ open: false, user: undefined });
+        }
+    };
     return (
         <Layout>
             <SEO
@@ -46,9 +62,18 @@ const Users = () => {
                     <EditUserModal
                         show={currentUser.rol === "Admin" && openEditModal.open}
                         onClose={() => {
-                            modalHandler();
+                            modalHandlerEdit();
                         }}
                         user={openEditModal.user}
+                    />
+                    <DeleteUserModal
+                        show={
+                            currentUser.rol === "Admin" && openRemoveModal.open
+                        }
+                        onClose={() => {
+                            modalHandlerDelete();
+                        }}
+                        user={openRemoveModal.user}
                     />
                     <WelcomeArea
                         prev={[{ text: "Inicio", link: "/home" }]}
@@ -62,7 +87,12 @@ const Users = () => {
                                     <th scope="col">Nombre</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Rol</th>
-                                    <th scope="col">Editar</th>
+                                    {currentUser.rol === "Admin" && (
+                                        <th scope="col">Editar</th>
+                                    )}
+                                    {currentUser.rol === "Admin" && (
+                                        <th scope="col">Eliminar</th>
+                                    )}
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,16 +101,32 @@ const Users = () => {
                                         <td>{user.name}</td>
                                         <td>{user.email}</td>
                                         <td>{user.rol}</td>
-                                        <td>
-                                            <Button
-                                                color="primary"
-                                                onClick={() => {
-                                                    modalHandler(user);
-                                                }}
-                                            >
-                                                <Edit color="white" />
-                                            </Button>
-                                        </td>
+                                        {currentUser.rol === "Admin" && (
+                                            <td>
+                                                <Button
+                                                    color="primary"
+                                                    onClick={() => {
+                                                        modalHandlerEdit(user);
+                                                    }}
+                                                >
+                                                    <Edit color="white" />
+                                                </Button>
+                                            </td>
+                                        )}
+                                        {currentUser.rol === "Admin" && (
+                                            <td>
+                                                <Button
+                                                    color="primary"
+                                                    onClick={() => {
+                                                        modalHandlerDelete(
+                                                            user
+                                                        );
+                                                    }}
+                                                >
+                                                    <X color="white" />
+                                                </Button>
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>

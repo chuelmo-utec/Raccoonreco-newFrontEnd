@@ -10,8 +10,9 @@ import { IAuth, IUser } from "../../@types/user";
 import usePartners from "../../hooks/partners/usePartners";
 import { IPartner } from "../../@types/partners";
 import { useState } from "react";
-import { Edit } from "react-feather";
+import { Edit, X } from "react-feather";
 import EditPartnerModal from "../../components/editpartner-modal/EditPartner-Modal";
+import DeletePartnerModal from "../../components/deletepartner-modal/DeletePartner-Modal";
 
 const Partners = () => {
     const auth = useSelector(selectAuth) as IAuth;
@@ -28,11 +29,27 @@ const Partners = () => {
         partner: undefined,
     });
 
-    const modalHandler = (partner?: IPartner) => {
+    const [openDeleteModal, setOpenDeleteModal] = useState<{
+        open: boolean;
+        partner: IPartner | undefined;
+    }>({
+        open: false,
+        partner: undefined,
+    });
+
+    const modalEditPartnerHandler = (partner?: IPartner) => {
         if (partner) {
             setOpenEditModal({ open: true, partner: partner });
         } else {
             setOpenEditModal({ open: false, partner: undefined });
+        }
+    };
+
+    const modalDeletePartnerHandler = (partner?: IPartner) => {
+        if (partner) {
+            setOpenDeleteModal({ open: true, partner: partner });
+        } else {
+            setOpenDeleteModal({ open: false, partner: undefined });
         }
     };
 
@@ -48,9 +65,18 @@ const Partners = () => {
                     <EditPartnerModal
                         show={currentUser.rol === "Admin" && openEditModal.open}
                         onClose={() => {
-                            modalHandler();
+                            modalEditPartnerHandler();
                         }}
                         partner={openEditModal.partner}
+                    />
+                    <DeletePartnerModal
+                        show={
+                            currentUser.rol === "Admin" && openDeleteModal.open
+                        }
+                        onClose={() => {
+                            modalDeletePartnerHandler();
+                        }}
+                        partner={openDeleteModal.partner}
                     />
                     <WelcomeArea
                         prev={[{ text: "Inicio", link: "/home" }]}
@@ -66,7 +92,12 @@ const Partners = () => {
                                     <th scope="col">Documento</th>
                                     <th scope="col">Número de Contacto</th>
                                     <th scope="col">Autorizado</th>
-                                    <th scope="col">Editar</th>
+                                    {currentUser.rol === "Admin" && (
+                                        <th scope="col">Editar</th>
+                                    )}
+                                    {currentUser.rol === "Admin" && (
+                                        <th scope="col">Eliminar</th>
+                                    )}
                                 </tr>
                             </thead>
                             <tbody>
@@ -89,16 +120,34 @@ const Partners = () => {
                                                     : "Bloqueado"}
                                             </Badge>
                                         </td>
-                                        <td>
-                                            <Button
-                                                color="primary"
-                                                onClick={() => {
-                                                    modalHandler(partner);
-                                                }}
-                                            >
-                                                <Edit color="white" />
-                                            </Button>
-                                        </td>
+                                        {currentUser.rol === "Admin" && (
+                                            <td>
+                                                <Button
+                                                    color="primary"
+                                                    onClick={() => {
+                                                        modalEditPartnerHandler(
+                                                            partner
+                                                        );
+                                                    }}
+                                                >
+                                                    <Edit color="white" />
+                                                </Button>
+                                            </td>
+                                        )}
+                                        {currentUser.rol === "Admin" && (
+                                            <td>
+                                                <Button
+                                                    color="primary"
+                                                    onClick={() => {
+                                                        modalDeletePartnerHandler(
+                                                            partner
+                                                        );
+                                                    }}
+                                                >
+                                                    <X color="white" />
+                                                </Button>
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>

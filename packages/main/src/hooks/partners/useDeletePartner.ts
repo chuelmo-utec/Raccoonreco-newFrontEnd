@@ -2,7 +2,7 @@ import { useMutation } from "react-query";
 import axios, { AxiosError } from "axios";
 import { IPartner, IPartnerForm } from "../../@types/partners";
 
-async function createPartner(args: IPartnerForm & { accessToken: string }) {
+async function deletePartner(args: IPartnerForm & { accessToken: string }) {
     const url = new URL(
         `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/partner`
     );
@@ -14,27 +14,21 @@ async function createPartner(args: IPartnerForm & { accessToken: string }) {
 
     const body = {
         partnerId: args.partnerId.toString(),
-        document: args.document,
-        contactNumber: args.contactNumber,
-        name: args.name,
     };
 
-    const response = await axios.post<{ partner: IPartner }>(
-        url.toString(),
-        body,
-        {
-            headers,
-        }
-    );
+    const response = await axios.delete<{ partner: IPartner }>(url.toString(), {
+        data: body,
+        headers,
+    });
     return response.data.partner;
 }
 
-function useCreatePartner() {
+function useDeletePartner() {
     return useMutation<
         IPartner,
         AxiosError,
         IPartnerForm & { accessToken: string }
-    >((mutationVars) => createPartner(mutationVars));
+    >((mutationVars) => deletePartner(mutationVars));
 }
 
-export default useCreatePartner;
+export default useDeletePartner;

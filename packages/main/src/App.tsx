@@ -37,7 +37,7 @@ const App = () => {
                             element={
                                 <PrivateRoute
                                     component={Home}
-                                    roles={["Admin"]}
+                                    roles={["Admin", "User"]}
                                 />
                             }
                         />
@@ -46,7 +46,7 @@ const App = () => {
                             element={
                                 <PrivateRoute
                                     component={Users}
-                                    roles={["Admin"]}
+                                    roles={["Admin", "User"]}
                                 />
                             }
                         />
@@ -55,7 +55,7 @@ const App = () => {
                             element={
                                 <PrivateRoute
                                     component={Partners}
-                                    roles={["Admin"]}
+                                    roles={["Admin", "User"]}
                                 />
                             }
                         />
@@ -64,7 +64,7 @@ const App = () => {
                             element={
                                 <PrivateRoute
                                     component={CreatePartner}
-                                    roles={["Admin"]}
+                                    roles={["Admin", "User"]}
                                 />
                             }
                         />
@@ -74,7 +74,7 @@ const App = () => {
                             element={
                                 <PrivateRoute
                                     component={CreateUser}
-                                    roles={["Admin"]}
+                                    roles={["Admin", "User"]}
                                 />
                             }
                         />

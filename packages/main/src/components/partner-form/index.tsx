@@ -13,10 +13,11 @@ import { hasKey } from "@doar/shared/methods";
 import { StyledWrap } from "./style";
 import { IAuth } from "../../@types/user";
 import { selectAuth } from "../../redux/slices/auth";
-import { IPartnerForm } from "../../@types/partners";
+import { IPartner, IPartnerForm } from "../../@types/partners";
 import useCreatePartner from "../../hooks/partners/useCreatePartner";
 import ModalConfirmationPassword from "../token/ModalConfirmationPassword";
 import { AxiosError } from "axios";
+import { useQueryClient } from "react-query";
 
 const PartnerForm = () => {
     const createPartnerMutation = useCreatePartner();
@@ -29,6 +30,7 @@ const PartnerForm = () => {
     const [error, setError] = useState<string | null>(null);
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
     const accessToken = useSelector(selectAuth) as IAuth;
+    const queryClient = useQueryClient();
 
     useEffect(() => {
         return () => {
@@ -43,7 +45,19 @@ const PartnerForm = () => {
                 accessToken: accessToken.access_token,
             },
             {
-                onSuccess: () => {
+                onSuccess: (response: IPartner) => {
+                    if (response) {
+                        queryClient.setQueryData<IPartner[] | undefined>(
+                            "usePartners",
+                            (prevData: IPartner[] | undefined) => {
+                                if (prevData) {
+                                    return [...prevData, response];
+                                } else {
+                                    return [response];
+                                }
+                            }
+                        );
+                    }
                     reset();
                 },
                 onError: (err: AxiosError) => {

@@ -25,16 +25,18 @@ const PartnerForm = () => {
         register,
         handleSubmit,
         formState: { errors },
+        setError,
+        clearErrors,
         reset,
     } = useForm<IPartnerForm>();
-    const [error, setError] = useState<string | null>(null);
+    const [error, setErr] = useState<string | null>(null);
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
     const accessToken = useSelector(selectAuth) as IAuth;
     const queryClient = useQueryClient();
 
     useEffect(() => {
         return () => {
-            setError(null);
+            setErr(null);
         };
     }, []);
 
@@ -58,13 +60,19 @@ const PartnerForm = () => {
                             }
                         );
                     }
+                    setErr(null);
                     reset();
                 },
                 onError: (err: AxiosError) => {
                     if (err.response && err.response.status === 401) {
                         setConfirmationOpen(true);
+                    } else if (err.response && err.response.status === 409) {
+                        setErr("Ya existe un socio con ese numero de socio.");
+                        setError("partnerId", {
+                            message: "El numero de socio se encuentra en uso",
+                        });
                     } else {
-                        setError("Ocurrió un error, intente más tarde.");
+                        setErr("Ocurrió un error, intente más tarde.");
                     }
                 },
             }

@@ -28,14 +28,15 @@ const UserForm = () => {
         formState: { errors },
         reset,
         getValues,
+        setError,
     } = useForm<IUserForm & { confirmPassword: string }>();
-    const [error, setError] = useState<string | null>(null);
+    const [error, setErr] = useState<string | null>(null);
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
     const accessToken = useSelector(selectAuth) as IAuth;
 
     useEffect(() => {
         return () => {
-            setError(null);
+            setErr(null);
         };
     }, []);
 
@@ -62,13 +63,19 @@ const UserForm = () => {
                             }
                         );
                     }
+                    setErr(null);
                     reset();
                 },
                 onError: (err: AxiosError) => {
                     if (err.response && err.response.status === 401) {
                         setConfirmationOpen(true);
+                    } else if (err.response && err.response.status === 409) {
+                        setErr("El correo ingresado ya esta en uso.");
+                        setError("email", {
+                            message: "El correo ingresado ya esta en uso.",
+                        });
                     } else {
-                        setError("Ocurrió un error, intente más tarde.");
+                        setErr("Ocurrió un error, intente más tarde.");
                     }
                 },
             }

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
     CardBody,
     Heading,
@@ -27,9 +27,6 @@ import { IAuth } from "../../../@types/user";
 import { AxiosError } from "axios";
 import { IRecognizeMsg } from "../../../@types/recognize";
 import ModalConfirmationPassword from "../../../components/token/ModalConfirmationPassword";
-import { useForm } from "react-hook-form";
-import { IFaceForm } from "../../../@types/face";
-import { hasKey } from "@doar/shared/methods";
 
 interface IProps {
     show: boolean;
@@ -111,7 +108,7 @@ const InsertFace = ({ show, onClose, partner }: IProps) => {
                 setError("Asegurate de ingresar una foto.");
             }
         },
-        [webcamRef, uploadedImage]
+        [webcamRef, uploadedImage, accessToken]
     );
 
     return (

@@ -77,7 +77,7 @@ const LatestActivity = () => {
                 }
             );
         }
-    }, [webcamRef]);
+    }, [webcamRef, accessToken]);
 
     return (
         <StyledCard mb={["20px", null, null, "25px"]}>

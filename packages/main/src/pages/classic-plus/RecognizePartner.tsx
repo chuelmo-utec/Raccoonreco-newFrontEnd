@@ -5,6 +5,7 @@ import ContentBody from "../../layouts/layout/content-body";
 import WelcomeArea from "../../containers/dashboard-one/welcome-area";
 import SEO from "../../components/seo";
 import PartnerForm from "../../components/partner-form";
+import RecognizeFace from "../../components/recognize-face/RecognizeFace";
 
 const CreatePartner = () => {
     return (
@@ -19,10 +20,10 @@ const CreatePartner = () => {
                     <WelcomeArea
                         prev={[{ text: "Inicio", link: "/home" }]}
                         title="Socios"
-                        wcText="Dar de alta un socio"
+                        wcText="Reconocer socio"
                     />
                     <Row gutters={10}>
-                        <PartnerForm />
+                        <RecognizeFace />
                     </Row>
                 </ContentBody>
             </Content>

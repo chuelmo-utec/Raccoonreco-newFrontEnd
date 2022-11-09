@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback, useEffect } from "react";
 import { Menu, X, ArrowLeft } from "react-feather";
-import { Button } from "@doar/components";
+import { Navbar, Button } from "@doar/components";
 import NotificationDropdown from "../../components/header/notification-dropdown";
 import ProfileDropdown from "../../components/header/profile-dropdown";
 import Logo from "../../components/logo";
@@ -15,6 +15,8 @@ import {
     StyleNavbarRight,
     StyledNavbarElement,
     StyledNavbarHeader,
+    StyledNavbarBody,
+    StyledNavbarTitle,
     StyledMenuBtn,
     StyledSidebarBtn,
 } from "./style";
@@ -27,6 +29,10 @@ interface IProps {
 const Header = ({ hasSidebar, sidebarLayout }: IProps) => {
     const dispatch = useAppDispatch();
     const { sidebar, isBody } = useAppSelector((state) => state.ui);
+    const [searchOpen, setSearchOpen] = useState(false);
+    const searchHandler = useCallback(() => {
+        setSearchOpen((prev) => !prev);
+    }, []);
 
     const [menuOpen, setMenuOpen] = useState(false);
     const sidebarHandler = useCallback(

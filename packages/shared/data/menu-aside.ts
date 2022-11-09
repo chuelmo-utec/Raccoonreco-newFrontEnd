@@ -5,6 +5,7 @@ import {
     Package,
     Layers,
     Home,
+    Smile,
 } from "react-feather";
 
 const asideMenus = [
@@ -28,6 +29,12 @@ const asideMenus = [
         url: "/",
         Icon: Package,
         submenu: [
+            {
+                id: 20,
+                label: "Reconocer Socio",
+                url: "/partners/recognize",
+                Icon: Smile,
+            },
             {
                 id: 21,
                 label: "Listado de Socios",

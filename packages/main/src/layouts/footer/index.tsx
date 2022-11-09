@@ -1,5 +1,11 @@
 import { Heart } from "react-feather";
-import { StyledFooter, StyledFooterLeft } from "./style";
+import {
+    StyledFooter,
+    StyledFooterLeft,
+    StyledFooterRight,
+    StyledFooterNav,
+    StyledFotterNavLink,
+} from "./style";
 
 const Footer = () => {
     return (

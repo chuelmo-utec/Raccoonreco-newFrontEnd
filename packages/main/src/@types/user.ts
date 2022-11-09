@@ -8,6 +8,7 @@ export type IUser = {
 };
 
 export type IUserForm = {
+    id?: number;
     email: string;
     name: string;
     password: string;

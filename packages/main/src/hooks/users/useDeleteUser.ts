@@ -2,7 +2,7 @@ import { useMutation } from "react-query";
 import axios, { AxiosError } from "axios";
 import { IUser, IUserForm } from "../../@types/user";
 
-async function createUser(args: IUserForm & { accessToken: string }) {
+async function deleteUser(args: IUserForm & { accessToken: string }) {
     const url = new URL(
         `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/user`
     );
@@ -13,22 +13,20 @@ async function createUser(args: IUserForm & { accessToken: string }) {
     };
 
     const body = {
-        name: args.name,
-        email: args.email,
-        password: args.password,
-        rol: args.rol,
+        id: args?.id?.toString(),
     };
 
-    const response = await axios.post<{ user: IUser }>(url.toString(), body, {
+    const response = await axios.delete<{ user: IUser }>(url.toString(), {
+        data: body,
         headers,
     });
     return response.data.user;
 }
 
-function useCreateUser() {
+function useDeleteUser() {
     return useMutation<IUser, AxiosError, IUserForm & { accessToken: string }>(
-        (mutationVars) => createUser(mutationVars)
+        (mutationVars) => deleteUser(mutationVars)
     );
 }
 
-export default useCreateUser;
+export default useDeleteUser;

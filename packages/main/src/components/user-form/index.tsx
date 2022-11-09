@@ -7,34 +7,40 @@ import {
     Button,
     Alert,
     Select,
+    Spinner,
 } from "@doar/components";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { hasKey } from "@doar/shared/methods";
 import { StyledWrap } from "./style";
-import { IAuth, IUserForm } from "../../@types/user";
+import { IAuth, IUser, IUserForm } from "../../@types/user";
 import { selectAuth } from "../../redux/slices/auth";
 import ModalConfirmationPassword from "../token/ModalConfirmationPassword";
 import { AxiosError } from "axios";
 import useCreateUser from "../../hooks/users/useCreateUser";
+import { useQueryClient } from "react-query";
 
 const UserForm = () => {
     const createUserMutation = useCreateUser();
+    const queryClient = useQueryClient();
     const {
         register,
         handleSubmit,
         formState: { errors },
         reset,
         getValues,
+        setError,
     } = useForm<IUserForm & { confirmPassword: string }>();
-    const [error, setError] = useState<string | null>(null);
+    const [error, setErr] = useState<string | null>(null);
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
     const accessToken = useSelector(selectAuth) as IAuth;
 
     useEffect(() => {
         return () => {
-            setError(null);
+            setErr(null);
         };
     }, []);
+
+    console.log(queryClient.getQueryData("useUsers"));
 
     const onSubmit: SubmitHandler<IUserForm> = (user) => {
         createUserMutation.mutate(
@@ -43,18 +49,33 @@ const UserForm = () => {
                 accessToken: accessToken.access_token,
             },
             {
-                onSuccess: () => {
+                onSuccess: (response: IUser) => {
+                    console.log("aca response", response);
+                    if (response) {
+                        queryClient.setQueryData<IUser[] | undefined>(
+                            "useUsers",
+                            (prevData: IUser[] | undefined) => {
+                                if (prevData) {
+                                    return [...prevData, response];
+                                } else {
+                                    return [response];
+                                }
+                            }
+                        );
+                    }
+                    setErr(null);
                     reset();
                 },
                 onError: (err: AxiosError) => {
                     if (err.response && err.response.status === 401) {
                         setConfirmationOpen(true);
-                    } else if (err.response && err.response.status === 400) {
-                        setError(
-                            "Ocurrió un error, ya existe un usuario con ese email"
-                        );
+                    } else if (err.response && err.response.status === 409) {
+                        setErr("El correo ingresado ya esta en uso.");
+                        setError("email", {
+                            message: "El correo ingresado ya esta en uso.",
+                        });
                     } else {
-                        setError("Ocurrió un error, intente más tarde.");
+                        setErr("Ocurrió un error, intente más tarde.");
                     }
                 },
             }
@@ -178,7 +199,10 @@ const UserForm = () => {
                     color="brand2"
                     disabled={createUserMutation.isLoading}
                 >
-                    Guardar
+                    {createUserMutation.isLoading
+                        ? "Espere por favor..."
+                        : "Guardar"}
+                    {createUserMutation.isLoading && <Spinner size="sm" />}
                 </Button>
             </form>
         </StyledWrap>

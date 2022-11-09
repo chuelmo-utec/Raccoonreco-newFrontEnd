@@ -2,7 +2,7 @@ import { useMutation } from "react-query";
 import axios, { AxiosError } from "axios";
 import { IPartner, IPartnerForm } from "../../@types/partners";
 
-async function createPartner(args: IPartnerForm & { accessToken: string }) {
+async function editPartner(args: IPartnerForm & { accessToken: string }) {
     const url = new URL(
         `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/partner`
     );
@@ -13,13 +13,15 @@ async function createPartner(args: IPartnerForm & { accessToken: string }) {
     };
 
     const body = {
+        id: args.id,
         partnerId: args.partnerId.toString(),
         document: args.document,
         contactNumber: args.contactNumber,
         name: args.name,
+        authorized: args.authorized,
     };
 
-    const response = await axios.post<{ partner: IPartner }>(
+    const response = await axios.patch<{ partner: IPartner }>(
         url.toString(),
         body,
         {
@@ -29,12 +31,12 @@ async function createPartner(args: IPartnerForm & { accessToken: string }) {
     return response.data.partner;
 }
 
-function useCreatePartner() {
+function useEditPartner() {
     return useMutation<
         IPartner,
         AxiosError,
         IPartnerForm & { accessToken: string }
-    >((mutationVars) => createPartner(mutationVars));
+    >((mutationVars) => editPartner(mutationVars));
 }
 
-export default useCreatePartner;
+export default useEditPartner;

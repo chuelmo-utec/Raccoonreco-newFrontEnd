@@ -1,20 +1,9 @@
-import { Anchor, Button } from "@doar/components";
-import {
-    StyledName,
-    StyledUserName,
-    StyledBtnWrap,
-    StyledDesc,
-    StyledBottom,
-    StyledSkillset,
-    StyledSkillNumb,
-    StyledSkillLabel,
-} from "./style";
+import { Button } from "@doar/components";
+import { StyledName, StyledUserName, StyledBtnWrap } from "./style";
 
 const UserDetails = () => {
     return (
         <>
-            <StyledName>Fen Chiu Mao</StyledName>
-            <StyledUserName>@fenchiumao</StyledUserName>
             <StyledBtnWrap>
                 <Button size="xs" color="white">
                     Message
@@ -23,37 +12,8 @@ const UserDetails = () => {
                     Follow
                 </Button>
             </StyledBtnWrap>
-            <StyledDesc>
-                Redhead, Innovator, Saviour of Mankind, Hopeless Romantic,
-                Attractive 20-something Yogurt Enthusiast...{" "}
-                <Anchor path="#!">Read More</Anchor>
-            </StyledDesc>
-            <StyledBottom>
-                <StyledSkillset>
-                    <StyledSkillNumb>
-                        <Anchor path="#!" color="text">
-                            1.4k
-                        </Anchor>
-                    </StyledSkillNumb>
-                    <StyledSkillLabel>Stars</StyledSkillLabel>
-                </StyledSkillset>
-                <StyledSkillset>
-                    <StyledSkillNumb>
-                        <Anchor path="#!" color="text">
-                            2.8k
-                        </Anchor>
-                    </StyledSkillNumb>
-                    <StyledSkillLabel>Followers</StyledSkillLabel>
-                </StyledSkillset>
-                <StyledSkillset>
-                    <StyledSkillNumb>
-                        <Anchor path="#!" color="text">
-                            437
-                        </Anchor>
-                    </StyledSkillNumb>
-                    <StyledSkillLabel>Following</StyledSkillLabel>
-                </StyledSkillset>
-            </StyledBottom>
+            <StyledName>Andrés Huelmo</StyledName>
+            <StyledUserName>andres@gmail.com</StyledUserName>
         </>
     );
 };

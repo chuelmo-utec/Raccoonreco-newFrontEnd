@@ -26,9 +26,10 @@ interface IProps {
     show: boolean;
     onClose: () => void;
     user?: IUser;
+    refresh: () => void;
 }
 
-const EditModal = ({ show, onClose, user }: IProps) => {
+const EditModal = ({ show, onClose, user, refresh }: IProps) => {
     const editUserMutation = useEditUser();
     const accessToken = useSelector(selectAuth) as IAuth;
     const [error, setError] = useState<string | null>(null);
@@ -73,6 +74,7 @@ const EditModal = ({ show, onClose, user }: IProps) => {
                         );
                     }
                     reset();
+                    refresh();
                     onClose();
                 },
                 onError: (err: AxiosError) => {

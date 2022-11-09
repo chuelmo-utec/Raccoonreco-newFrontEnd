@@ -19,17 +19,18 @@ import usePartnersPagination from "../../hooks/partners/usePartnersPagination";
 const Partners = () => {
     const auth = useSelector(selectAuth) as IAuth;
     const [offset, setOffset] = useState(0);
-    const { data: partners, refetch } = usePartnersPagination({
-        accessToken: auth.access_token,
-        offset,
-    });
+    const { data: partners, refetch: refetchPartnersPagination } =
+        usePartnersPagination({
+            accessToken: auth.access_token,
+            offset,
+        });
 
-    const { data: totalPartners } = usePartners({
+    const { data: totalPartners, refetch: refetchTotalPartners } = usePartners({
         accessToken: auth.access_token,
     });
 
     useEffect(() => {
-        refetch()
+        refetchPartnersPagination()
             .then()
             .catch((err) => {
                 console.log(err);
@@ -86,6 +87,19 @@ const Partners = () => {
         }
     };
 
+    const refreshFunction = () => {
+        refetchTotalPartners()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+        refetchPartnersPagination()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     return (
         <Layout>
             <SEO
@@ -108,6 +122,7 @@ const Partners = () => {
                             modalEditPartnerHandler();
                         }}
                         partner={openEditModal.partner}
+                        refresh={refreshFunction}
                     />
                     <DeletePartnerModal
                         show={
@@ -117,6 +132,7 @@ const Partners = () => {
                             modalDeletePartnerHandler();
                         }}
                         partner={openDeleteModal.partner}
+                        refresh={refreshFunction}
                     />
                     <WelcomeArea
                         prev={[{ text: "Inicio", link: "/home" }]}

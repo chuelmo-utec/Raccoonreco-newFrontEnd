@@ -33,22 +33,38 @@ const Users = () => {
     const [offset, setOffset] = useState(0);
     const auth = useSelector(selectAuth) as IAuth;
     const currentUser = useSelector(selectCurrentUser) as IUser;
-    const { data: users, refetch } = useUsersPagination({
-        accessToken: auth.access_token,
-        offset,
-    });
+    const { data: users, refetch: refetchUsersPagination } = useUsersPagination(
+        {
+            accessToken: auth.access_token,
+            offset,
+        }
+    );
 
-    const { data: totalUsers } = useUsers({
+    const { data: totalUsers, refetch: refetchTotalUsers } = useUsers({
         accessToken: auth.access_token,
     });
 
     useEffect(() => {
-        refetch()
+        refetchUsersPagination()
             .then()
             .catch((err) => {
                 console.log(err);
             });
     }, [offset]);
+
+    const refetchFunction = () => {
+        refetchUsersPagination()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+
+        refetchTotalUsers()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     const modalHandlerEdit = (user?: IUser) => {
         if (user) {
@@ -80,6 +96,7 @@ const Users = () => {
                             modalHandlerEdit();
                         }}
                         user={openEditModal.user}
+                        refresh={refetchFunction}
                     />
                     <DeleteUserModal
                         show={
@@ -89,6 +106,7 @@ const Users = () => {
                             modalHandlerDelete();
                         }}
                         user={openRemoveModal.user}
+                        refresh={refetchFunction}
                     />
                     <WelcomeArea
                         prev={[{ text: "Inicio", link: "/home" }]}

@@ -27,9 +27,10 @@ interface IProps {
     show: boolean;
     onClose: () => void;
     partner?: IPartner;
+    refresh: () => void;
 }
 
-const EditModal = ({ show, onClose, partner }: IProps) => {
+const EditModal = ({ show, onClose, partner, refresh }: IProps) => {
     const editPartnerMutation = useEditPartner();
     const accessToken = useSelector(selectAuth) as IAuth;
     const [error, setError] = useState<string | null>(null);
@@ -83,6 +84,7 @@ const EditModal = ({ show, onClose, partner }: IProps) => {
                         );
                     }
                     reset();
+                    refresh();
                     onClose();
                 },
                 onError: (err: AxiosError) => {

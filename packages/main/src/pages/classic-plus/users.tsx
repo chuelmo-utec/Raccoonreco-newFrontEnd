@@ -10,8 +10,9 @@ import { selectAuth, selectCurrentUser } from "../../redux/slices/auth";
 import { IAuth, IUser } from "../../@types/user";
 import { Edit, X } from "react-feather";
 import EditUserModal from "../../components/edituser-modal/EditUser-Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteUserModal from "../../components/deleteuser-modal/DeleteUser-Modal";
+import useUsersPagination from "../../hooks/users/useUsersPagination";
 
 const Users = () => {
     const [openEditModal, setOpenEditModal] = useState<{
@@ -29,11 +30,25 @@ const Users = () => {
         open: false,
         user: undefined,
     });
+    const [offset, setOffset] = useState(0);
     const auth = useSelector(selectAuth) as IAuth;
     const currentUser = useSelector(selectCurrentUser) as IUser;
-    const { data: users } = useUsers({
+    const { data: users, refetch } = useUsersPagination({
+        accessToken: auth.access_token,
+        offset,
+    });
+
+    const { data: totalUsers } = useUsers({
         accessToken: auth.access_token,
     });
+
+    useEffect(() => {
+        refetch()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [offset]);
 
     const modalHandlerEdit = (user?: IUser) => {
         if (user) {
@@ -140,6 +155,34 @@ const Users = () => {
                             </tbody>
                         </Table>
                     </Row>
+                    <div
+                        style={{
+                            textAlign: "center",
+                        }}
+                    >
+                        <Button
+                            disabled={offset === 0}
+                            color="primary"
+                            onClick={() => {
+                                setOffset((prev) => prev - 5);
+                            }}
+                            mr={25}
+                        >
+                            Anterior
+                        </Button>
+                        <Button
+                            disabled={
+                                totalUsers &&
+                                (offset + 5) / totalUsers?.length >= 1
+                            }
+                            color="primary"
+                            onClick={() => {
+                                setOffset((prev) => prev + 5);
+                            }}
+                        >
+                            Siguiente
+                        </Button>
+                    </div>
                 </ContentBody>
             </Content>
         </Layout>

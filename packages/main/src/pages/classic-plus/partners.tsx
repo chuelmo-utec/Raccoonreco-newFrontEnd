@@ -9,17 +9,33 @@ import { selectAuth, selectCurrentUser } from "../../redux/slices/auth";
 import { IAuth, IUser } from "../../@types/user";
 import usePartners from "../../hooks/partners/usePartners";
 import { IPartner } from "../../@types/partners";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Edit, X, UserPlus } from "react-feather";
 import EditPartnerModal from "../../components/editpartner-modal/EditPartner-Modal";
 import DeletePartnerModal from "../../components/deletepartner-modal/DeletePartner-Modal";
 import InsertFace from "../../components/profile-view/insert-face/InsertFace";
+import usePartnersPagination from "../../hooks/partners/usePartnersPagination";
 
 const Partners = () => {
     const auth = useSelector(selectAuth) as IAuth;
-    const { data: partners } = usePartners({
+    const [offset, setOffset] = useState(0);
+    const { data: partners, refetch } = usePartnersPagination({
+        accessToken: auth.access_token,
+        offset,
+    });
+
+    const { data: totalPartners } = usePartners({
         accessToken: auth.access_token,
     });
+
+    useEffect(() => {
+        refetch()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [offset]);
+
     const currentUser = useSelector(selectCurrentUser) as IUser;
 
     const [openEditModal, setOpenEditModal] = useState<{
@@ -202,6 +218,34 @@ const Partners = () => {
                             </tbody>
                         </Table>
                     </Row>
+                    <div
+                        style={{
+                            textAlign: "center",
+                        }}
+                    >
+                        <Button
+                            disabled={offset === 0}
+                            color="primary"
+                            onClick={() => {
+                                setOffset((prev) => prev - 5);
+                            }}
+                            mr={25}
+                        >
+                            Anterior
+                        </Button>
+                        <Button
+                            disabled={
+                                totalPartners &&
+                                (offset + 5) / totalPartners?.length >= 1
+                            }
+                            color="primary"
+                            onClick={() => {
+                                setOffset((prev) => prev + 5);
+                            }}
+                        >
+                            Siguiente
+                        </Button>
+                    </div>
                 </ContentBody>
             </Content>
         </Layout>

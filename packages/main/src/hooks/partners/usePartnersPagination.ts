@@ -9,12 +9,21 @@ import { IAuth } from "../../@types/user";
 async function fetchPartnersPagination(args: {
     accessToken: string;
     offset: number;
+    filterPartnerId?: number;
 }) {
-    const url = new URL(
-        `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/partners?offset=${
-            args.offset
-        }`
-    );
+    const url = args.filterPartnerId
+        ? new URL(
+              `${
+                  process.env.REACT_APP_BACKEND_URL ?? ""
+              }/api/v1/partners?offset=${args.offset}&partnerId=${
+                  args.filterPartnerId
+              }`
+          )
+        : new URL(
+              `${
+                  process.env.REACT_APP_BACKEND_URL ?? ""
+              }/api/v1/partners?offset=${args.offset}`
+          );
 
     const headers = {
         Authorization: `Bearer ${args.accessToken}`,
@@ -30,6 +39,7 @@ async function fetchPartnersPagination(args: {
 function usePartnersPagination<TQueryData = IPartner[]>(args: {
     accessToken: string;
     offset: number;
+    filterPartnerId?: number;
     queryOptions?: UseQueryOptions<IPartner[], AxiosError, TQueryData>;
 }) {
     const queryClient = useQueryClient();
@@ -43,6 +53,7 @@ function usePartnersPagination<TQueryData = IPartner[]>(args: {
             fetchPartnersPagination({
                 accessToken: args.accessToken,
                 offset: args.offset,
+                filterPartnerId: args.filterPartnerId,
             }),
         {
             onError: (error: AxiosError) => {

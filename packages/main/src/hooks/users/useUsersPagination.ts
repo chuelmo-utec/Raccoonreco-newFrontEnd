@@ -7,13 +7,21 @@ import { selectAuth, setToken } from "../../redux/slices/auth";
 
 async function fetchUsersPagination(args: {
     accessToken: string;
+    filterByEmail?: string;
     offset: number;
 }) {
-    const url = new URL(
-        `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/users?offset=${
-            args.offset
-        }`
-    );
+    console.log(args?.filterByEmail);
+    const url = args?.filterByEmail
+        ? new URL(
+              `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/users?offset=${
+                  args.offset
+              }&email=${args.filterByEmail}`
+          )
+        : new URL(
+              `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/users?offset=${
+                  args.offset
+              }`
+          );
 
     const headers = {
         Authorization: `Bearer ${args.accessToken}`,
@@ -29,6 +37,7 @@ async function fetchUsersPagination(args: {
 function useUsersPagination<TQueryData = IUser[]>(args: {
     accessToken: string;
     offset: number;
+    filterByEmail?: string;
     queryOptions?: UseQueryOptions<IUser[], AxiosError, TQueryData>;
 }) {
     const queryClient = useQueryClient();
@@ -41,6 +50,7 @@ function useUsersPagination<TQueryData = IUser[]>(args: {
         () =>
             fetchUsersPagination({
                 accessToken: args.accessToken,
+                filterByEmail: args.filterByEmail,
                 offset: args.offset,
             }),
         {

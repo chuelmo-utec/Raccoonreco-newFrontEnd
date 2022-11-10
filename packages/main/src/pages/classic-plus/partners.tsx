@@ -19,14 +19,19 @@ import usePartnersPagination from "../../hooks/partners/usePartnersPagination";
 const Partners = () => {
     const auth = useSelector(selectAuth) as IAuth;
     const [offset, setOffset] = useState(0);
+    const [filterPartnerId, setFilterPartnerId] = useState<number | undefined>(
+        undefined
+    );
     const { data: partners, refetch: refetchPartnersPagination } =
         usePartnersPagination({
             accessToken: auth.access_token,
+            filterPartnerId: filterPartnerId,
             offset,
         });
 
     const { data: totalPartners, refetch: refetchTotalPartners } = usePartners({
         accessToken: auth.access_token,
+        filterPartnerId: filterPartnerId,
     });
 
     useEffect(() => {
@@ -35,7 +40,12 @@ const Partners = () => {
             .catch((err) => {
                 console.log(err);
             });
-    }, [offset]);
+        refetchTotalPartners()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [offset, filterPartnerId]);
 
     const currentUser = useSelector(selectCurrentUser) as IUser;
 
@@ -139,6 +149,14 @@ const Partners = () => {
                         title="Socios"
                         wcText="Listado de Socios"
                     />
+                    <input
+                        placeholder="Filtrar por Numero de Socio"
+                        style={{ marginBottom: 15, width: "25%" }}
+                        type={"number"}
+                        onChange={(e) => {
+                            setFilterPartnerId(parseInt(e.target.value));
+                        }}
+                    ></input>
                     <Row gutters={10}>
                         <Table bordered={true}>
                             <thead>

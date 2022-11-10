@@ -31,17 +31,22 @@ const Users = () => {
         user: undefined,
     });
     const [offset, setOffset] = useState(0);
+    const [filterEmail, setFilterEmail] = useState<string | undefined>(
+        undefined
+    );
     const auth = useSelector(selectAuth) as IAuth;
     const currentUser = useSelector(selectCurrentUser) as IUser;
     const { data: users, refetch: refetchUsersPagination } = useUsersPagination(
         {
             accessToken: auth.access_token,
+            filterByEmail: filterEmail,
             offset,
         }
     );
 
     const { data: totalUsers, refetch: refetchTotalUsers } = useUsers({
         accessToken: auth.access_token,
+        filterByEmail: filterEmail,
     });
 
     useEffect(() => {
@@ -50,7 +55,13 @@ const Users = () => {
             .catch((err) => {
                 console.log(err);
             });
-    }, [offset]);
+
+        refetchTotalUsers()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [offset, filterEmail]);
 
     const refetchFunction = () => {
         refetchUsersPagination()
@@ -113,6 +124,15 @@ const Users = () => {
                         title="Usuarios"
                         wcText="Listado de Usuarios"
                     />
+
+                    <input
+                        placeholder="Filtrar por Email"
+                        style={{ marginBottom: 15, width: "25%" }}
+                        onChange={(e) => {
+                            setFilterEmail(e.target.value);
+                        }}
+                    ></input>
+
                     <Row gutters={10}>
                         <Table bordered={true}>
                             <thead>

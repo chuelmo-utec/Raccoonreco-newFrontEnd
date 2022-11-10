@@ -6,10 +6,17 @@ import useRefreshToken from "../token/useRefreshToken";
 import { useDispatch, useSelector } from "react-redux";
 import { IAuth } from "../../@types/user";
 
-async function fetchPartners(args: { accessToken: string }) {
-    const url = new URL(
-        `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/partners`
-    );
+async function fetchPartners(args: {
+    accessToken: string;
+    filterPartnerId?: number;
+}) {
+    const url = args.filterPartnerId
+        ? new URL(
+              `${
+                  process.env.REACT_APP_BACKEND_URL ?? ""
+              }/api/v1/partners?partnerId=${args.filterPartnerId}`
+          )
+        : new URL(`${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/partners`);
 
     const headers = {
         Authorization: `Bearer ${args.accessToken}`,
@@ -24,6 +31,7 @@ async function fetchPartners(args: { accessToken: string }) {
 
 function usePartners<TQueryData = IPartner[]>(args: {
     accessToken: string;
+    filterPartnerId?: number;
     queryOptions?: UseQueryOptions<IPartner[], AxiosError, TQueryData>;
 }) {
     const queryClient = useQueryClient();
@@ -33,7 +41,11 @@ function usePartners<TQueryData = IPartner[]>(args: {
 
     return useQuery<IPartner[], AxiosError, TQueryData>(
         "usePartners",
-        () => fetchPartners({ accessToken: args.accessToken }),
+        () =>
+            fetchPartners({
+                accessToken: args.accessToken,
+                filterPartnerId: args.filterPartnerId,
+            }),
         {
             onError: (error: AxiosError) => {
                 if (error.response && error.response.status === 401) {

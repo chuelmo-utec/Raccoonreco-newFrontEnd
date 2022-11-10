@@ -109,7 +109,7 @@ const PartnerForm = () => {
                 }}
                 noValidate
             >
-                <a href="http://localhost:3000/Template.csv" download>
+                <a href="/Template.csv" download>
                     Click para descargar template
                 </a>
                 <input

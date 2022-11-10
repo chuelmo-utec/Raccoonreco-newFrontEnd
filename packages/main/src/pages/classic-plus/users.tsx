@@ -61,7 +61,7 @@ const Users = () => {
             .catch((err) => {
                 console.log(err);
             });
-    }, [offset, filterEmail]);
+    }, [offset, filterEmail, refetchTotalUsers, refetchUsersPagination]);
 
     const refetchFunction = () => {
         refetchUsersPagination()

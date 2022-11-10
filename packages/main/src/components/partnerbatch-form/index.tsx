@@ -1,19 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {
-    FormGroup,
-    Label,
-    Input,
-    Button,
-    Alert,
-    Spinner,
-} from "@doar/components";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { hasKey } from "@doar/shared/methods";
+import { Button, Alert, Spinner } from "@doar/components";
 import { StyledWrap } from "./style";
 import { IAuth } from "../../@types/user";
 import { selectAuth } from "../../redux/slices/auth";
-import { IPartner, IPartnerBatchForm } from "../../@types/partners";
+import { IPartner } from "../../@types/partners";
 import ModalConfirmationPassword from "../token/ModalConfirmationPassword";
 import { AxiosError } from "axios";
 import { useQueryClient } from "react-query";
@@ -80,7 +71,12 @@ const PartnerForm = () => {
                 setErr("El archivo CSV es obligatorio.");
             }
         },
-        [uploadFile]
+        [
+            uploadFile,
+            accessToken.access_token,
+            createPartnerBatchMutation,
+            queryClient,
+        ]
     );
 
     return (

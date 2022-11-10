@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, User, LogOut } from "react-feather";
+import { ChevronDown, Key, LogOut } from "react-feather";
 import { Heading, Text, Nav, NavLink } from "@doar/components";
 import {
     StyledLoggedInUser,
@@ -17,7 +17,11 @@ import {
 import useUserLogout from "../../../hooks/users/useUserLogout";
 import { IAuth } from "../../../@types/user";
 
-const LoggedinUser = () => {
+interface IProps {
+    onClickChangePassword: () => void;
+}
+
+const LoggedinUser = ({ onClickChangePassword }: IProps) => {
     const [show, setShow] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -62,8 +66,8 @@ const LoggedinUser = () => {
                 $show={show}
             >
                 <Nav vertical customStyle="aside">
-                    <NavLink path="#!">
-                        <User /> <span>Mi Perfil</span>
+                    <NavLink path="#!" onClick={onClickChangePassword}>
+                        <Key /> <span>Cambiar contraseña</span>
                     </NavLink>
                     <NavLink path="#!" onClick={logoutUser}>
                         <LogOut /> <span>Salir</span>

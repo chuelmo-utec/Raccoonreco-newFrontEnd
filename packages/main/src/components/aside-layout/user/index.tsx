@@ -6,7 +6,11 @@ import { selectCurrentUser } from "../../../redux/slices/auth";
 import { getInitialAvatar } from "../../../utils/utils";
 import { useMemo } from "react";
 
-const AsideUser = () => {
+interface IProps {
+    onClickChangePassword: () => void;
+}
+
+const AsideUser = ({ onClickChangePassword }: IProps) => {
     const user = useSelector(selectCurrentUser);
     const avatar = useMemo(() => {
         if (user?.name) {
@@ -22,7 +26,7 @@ const AsideUser = () => {
                     <AvatarInitial>{avatar}</AvatarInitial>
                 </Avatar>
             </StyledAvatarWrap>
-            <LoggedinUser />
+            <LoggedinUser onClickChangePassword={onClickChangePassword} />
         </StyledUser>
     );
 };

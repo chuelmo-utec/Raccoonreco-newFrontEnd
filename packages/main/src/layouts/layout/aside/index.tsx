@@ -13,6 +13,7 @@ import {
     StyledBodyInner,
     StyledBackdrop,
 } from "./style";
+import ChangePasswordModal from "../../../components/changepassword-modal/ChangePassword-Modal";
 
 type TMaxText = "enter" | "leave";
 
@@ -78,8 +79,18 @@ const Aisde = ({ layout, sidebarLayout }: IProps) => {
     const minClass = minimize ? "minimize" : "";
     const maxClass = maximize ? "maximize" : "";
 
+    const [showChangePasswordModal, setShowPasswordModal] = useState(false);
+
+    const handleShowChangePasswordModal = () => {
+        setShowPasswordModal((prev) => !prev);
+    };
+
     return (
         <>
+            <ChangePasswordModal
+                show={showChangePasswordModal}
+                onClose={handleShowChangePasswordModal}
+            />
             <StyledBackdrop $show={show} onClick={displayHandler} />
             <StyledAside
                 className={cn(minClass, maxClass)}
@@ -107,7 +118,11 @@ const Aisde = ({ layout, sidebarLayout }: IProps) => {
                 >
                     <Scrollbar>
                         <StyledBodyInner className="aside-body-inner">
-                            <AsideUser />
+                            <AsideUser
+                                onClickChangePassword={
+                                    handleShowChangePasswordModal
+                                }
+                            />
                             <NavbarAside menus={asideMenuData} />
                         </StyledBodyInner>
                     </Scrollbar>

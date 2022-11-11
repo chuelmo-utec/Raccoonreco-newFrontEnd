@@ -1,49 +1,59 @@
 import { useQuery, useQueryClient, UseQueryOptions } from "react-query";
 import axios, { AxiosError } from "axios";
-import { IAuth, IUser } from "../../@types/user";
+import { IPartner } from "../../@types/partners";
+import { selectAuth, setToken } from "../../redux/slices/auth";
 import useRefreshToken from "../token/useRefreshToken";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAuth, setToken } from "../../redux/slices/auth";
+import { IAuth } from "../../@types/user";
 
-async function fetchUsers(args: {
+async function fetchPartnersPagination(args: {
     accessToken: string;
-    filterByEmail?: string;
+    offset: number;
+    filterPartnerId?: number;
 }) {
-    const url = args.filterByEmail
+    const url = args.filterPartnerId
         ? new URL(
-              `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/users?email=${
-                  args.filterByEmail
+              `${
+                  process.env.REACT_APP_BACKEND_URL ?? ""
+              }/api/v1/partners?offset=${args.offset}&partnerId=${
+                  args.filterPartnerId
               }`
           )
-        : new URL(`${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/users`);
+        : new URL(
+              `${
+                  process.env.REACT_APP_BACKEND_URL ?? ""
+              }/api/v1/partners?offset=${args.offset}`
+          );
 
     const headers = {
         Authorization: `Bearer ${args.accessToken}`,
         "Content-Type": "application/json",
     };
 
-    const response = await axios.get<{ data: IUser[] }>(url.toString(), {
+    const response = await axios.get<{ data: IPartner[] }>(url.toString(), {
         headers,
     });
     return response.data.data;
 }
 
-function useUsers<TQueryData = IUser[]>(args: {
+function usePartnersPagination<TQueryData = IPartner[]>(args: {
     accessToken: string;
-    filterByEmail?: string;
-    queryOptions?: UseQueryOptions<IUser[], AxiosError, TQueryData>;
+    offset: number;
+    filterPartnerId?: number;
+    queryOptions?: UseQueryOptions<IPartner[], AxiosError, TQueryData>;
 }) {
     const queryClient = useQueryClient();
     const refreshTokenMutation = useRefreshToken();
     const dispatch = useDispatch();
     const auth = useSelector(selectAuth) as IAuth;
 
-    return useQuery<IUser[], AxiosError, TQueryData>(
-        "useUsers",
+    return useQuery<IPartner[], AxiosError, TQueryData>(
+        "usePartnersPagination",
         () =>
-            fetchUsers({
+            fetchPartnersPagination({
                 accessToken: args.accessToken,
-                filterByEmail: args.filterByEmail,
+                offset: args.offset,
+                filterPartnerId: args.filterPartnerId,
             }),
         {
             onError: (error: AxiosError) => {
@@ -73,4 +83,4 @@ function useUsers<TQueryData = IUser[]>(args: {
     );
 }
 
-export default useUsers;
+export default usePartnersPagination;

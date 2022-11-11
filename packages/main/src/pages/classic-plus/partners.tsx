@@ -9,17 +9,44 @@ import { selectAuth, selectCurrentUser } from "../../redux/slices/auth";
 import { IAuth, IUser } from "../../@types/user";
 import usePartners from "../../hooks/partners/usePartners";
 import { IPartner } from "../../@types/partners";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Edit, X, UserPlus } from "react-feather";
 import EditPartnerModal from "../../components/editpartner-modal/EditPartner-Modal";
 import DeletePartnerModal from "../../components/deletepartner-modal/DeletePartner-Modal";
 import InsertFace from "../../components/profile-view/insert-face/InsertFace";
+import usePartnersPagination from "../../hooks/partners/usePartnersPagination";
 
 const Partners = () => {
     const auth = useSelector(selectAuth) as IAuth;
-    const { data: partners } = usePartners({
+    const [offset, setOffset] = useState(0);
+    const [filterPartnerId, setFilterPartnerId] = useState<number | undefined>(
+        undefined
+    );
+    const { data: partners, refetch: refetchPartnersPagination } =
+        usePartnersPagination({
+            accessToken: auth.access_token,
+            filterPartnerId: filterPartnerId,
+            offset,
+        });
+
+    const { data: totalPartners, refetch: refetchTotalPartners } = usePartners({
         accessToken: auth.access_token,
+        filterPartnerId: filterPartnerId,
     });
+
+    useEffect(() => {
+        refetchPartnersPagination()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+        refetchTotalPartners()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [offset, filterPartnerId]);
+
     const currentUser = useSelector(selectCurrentUser) as IUser;
 
     const [openEditModal, setOpenEditModal] = useState<{
@@ -70,6 +97,19 @@ const Partners = () => {
         }
     };
 
+    const refreshFunction = () => {
+        refetchTotalPartners()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+        refetchPartnersPagination()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     return (
         <Layout>
             <SEO
@@ -92,6 +132,7 @@ const Partners = () => {
                             modalEditPartnerHandler();
                         }}
                         partner={openEditModal.partner}
+                        refresh={refreshFunction}
                     />
                     <DeletePartnerModal
                         show={
@@ -101,12 +142,21 @@ const Partners = () => {
                             modalDeletePartnerHandler();
                         }}
                         partner={openDeleteModal.partner}
+                        refresh={refreshFunction}
                     />
                     <WelcomeArea
                         prev={[{ text: "Inicio", link: "/home" }]}
                         title="Socios"
                         wcText="Listado de Socios"
                     />
+                    <input
+                        placeholder="Filtrar por Numero de Socio"
+                        style={{ marginBottom: 15, width: "25%" }}
+                        type={"number"}
+                        onChange={(e) => {
+                            setFilterPartnerId(parseInt(e.target.value));
+                        }}
+                    ></input>
                     <Row gutters={10}>
                         <Table bordered={true}>
                             <thead>
@@ -202,6 +252,34 @@ const Partners = () => {
                             </tbody>
                         </Table>
                     </Row>
+                    <div
+                        style={{
+                            textAlign: "center",
+                        }}
+                    >
+                        <Button
+                            disabled={offset === 0}
+                            color="primary"
+                            onClick={() => {
+                                setOffset((prev) => prev - 5);
+                            }}
+                            mr={25}
+                        >
+                            Anterior
+                        </Button>
+                        <Button
+                            disabled={
+                                totalPartners &&
+                                (offset + 5) / totalPartners?.length >= 1
+                            }
+                            color="primary"
+                            onClick={() => {
+                                setOffset((prev) => prev + 5);
+                            }}
+                        >
+                            Siguiente
+                        </Button>
+                    </div>
                 </ContentBody>
             </Content>
         </Layout>

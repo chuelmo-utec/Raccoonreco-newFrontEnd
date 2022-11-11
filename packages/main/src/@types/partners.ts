@@ -14,4 +14,9 @@ export type IPartnerForm = {
     document: string;
     contactNumber: string;
     authorized?: boolean;
+    csvFile?: Blob;
+};
+
+export type IPartnerBatchForm = {
+    csvFile: FormData;
 };

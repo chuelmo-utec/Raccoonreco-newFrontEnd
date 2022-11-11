@@ -5,17 +5,23 @@ import useRefreshToken from "../token/useRefreshToken";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuth, setToken } from "../../redux/slices/auth";
 
-async function fetchUsers(args: {
+async function fetchUsersPagination(args: {
     accessToken: string;
     filterByEmail?: string;
+    offset: number;
 }) {
-    const url = args.filterByEmail
+    console.log(args?.filterByEmail);
+    const url = args?.filterByEmail
         ? new URL(
-              `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/users?email=${
-                  args.filterByEmail
-              }`
+              `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/users?offset=${
+                  args.offset
+              }&email=${args.filterByEmail}`
           )
-        : new URL(`${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/users`);
+        : new URL(
+              `${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/users?offset=${
+                  args.offset
+              }`
+          );
 
     const headers = {
         Authorization: `Bearer ${args.accessToken}`,
@@ -28,8 +34,9 @@ async function fetchUsers(args: {
     return response.data.data;
 }
 
-function useUsers<TQueryData = IUser[]>(args: {
+function useUsersPagination<TQueryData = IUser[]>(args: {
     accessToken: string;
+    offset: number;
     filterByEmail?: string;
     queryOptions?: UseQueryOptions<IUser[], AxiosError, TQueryData>;
 }) {
@@ -39,11 +46,12 @@ function useUsers<TQueryData = IUser[]>(args: {
     const auth = useSelector(selectAuth) as IAuth;
 
     return useQuery<IUser[], AxiosError, TQueryData>(
-        "useUsers",
+        "useUsersPagination",
         () =>
-            fetchUsers({
+            fetchUsersPagination({
                 accessToken: args.accessToken,
                 filterByEmail: args.filterByEmail,
+                offset: args.offset,
             }),
         {
             onError: (error: AxiosError) => {
@@ -61,7 +69,9 @@ function useUsers<TQueryData = IUser[]>(args: {
                                     })
                                 );
                                 queryClient.clear();
-                                return queryClient.refetchQueries(["useUsers"]);
+                                return queryClient.refetchQueries([
+                                    "useUsersPagination",
+                                ]);
                             },
                         }
                     );
@@ -73,4 +83,4 @@ function useUsers<TQueryData = IUser[]>(args: {
     );
 }
 
-export default useUsers;
+export default useUsersPagination;

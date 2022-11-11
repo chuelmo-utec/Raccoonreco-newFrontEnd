@@ -16,9 +16,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { hasKey } from "@doar/shared/methods";
 import { useSelector } from "react-redux";
 import { selectAuth } from "../../redux/slices/auth";
-import { IAuth, IUser } from "../../@types/user";
+import { IAuth, IUser, IUserForm } from "../../@types/user";
 import { AxiosError } from "axios";
-import { IUserForm } from "../../@types/user";
 import { useQueryClient } from "react-query";
 import useEditUser from "../../hooks/users/useEditUser";
 import ModalConfirmationPassword from "../token/ModalConfirmationPassword";
@@ -27,9 +26,10 @@ interface IProps {
     show: boolean;
     onClose: () => void;
     user?: IUser;
+    refresh: () => void;
 }
 
-const EditModal = ({ show, onClose, user }: IProps) => {
+const EditModal = ({ show, onClose, user, refresh }: IProps) => {
     const editUserMutation = useEditUser();
     const accessToken = useSelector(selectAuth) as IAuth;
     const [error, setError] = useState<string | null>(null);
@@ -74,6 +74,7 @@ const EditModal = ({ show, onClose, user }: IProps) => {
                         );
                     }
                     reset();
+                    refresh();
                     onClose();
                 },
                 onError: (err: AxiosError) => {

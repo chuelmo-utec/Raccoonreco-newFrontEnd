@@ -27,9 +27,10 @@ interface IProps {
     show: boolean;
     onClose: () => void;
     partner?: IPartner;
+    refresh: () => void;
 }
 
-const DeleteModal = ({ show, onClose, partner }: IProps) => {
+const DeleteModal = ({ show, onClose, partner, refresh }: IProps) => {
     const deletePartnerMutation = useDeletePartner();
     const accessToken = useSelector(selectAuth) as IAuth;
     const [error, setError] = useState<string | null>(null);
@@ -68,6 +69,7 @@ const DeleteModal = ({ show, onClose, partner }: IProps) => {
                         );
                     }
                     reset();
+                    refresh();
                     onClose();
                 },
                 onError: (err: AxiosError) => {

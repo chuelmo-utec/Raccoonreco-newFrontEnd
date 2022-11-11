@@ -10,8 +10,9 @@ import { selectAuth, selectCurrentUser } from "../../redux/slices/auth";
 import { IAuth, IUser } from "../../@types/user";
 import { Edit, X } from "react-feather";
 import EditUserModal from "../../components/edituser-modal/EditUser-Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteUserModal from "../../components/deleteuser-modal/DeleteUser-Modal";
+import useUsersPagination from "../../hooks/users/useUsersPagination";
 
 const Users = () => {
     const [openEditModal, setOpenEditModal] = useState<{
@@ -29,11 +30,52 @@ const Users = () => {
         open: false,
         user: undefined,
     });
+    const [offset, setOffset] = useState(0);
+    const [filterEmail, setFilterEmail] = useState<string | undefined>(
+        undefined
+    );
     const auth = useSelector(selectAuth) as IAuth;
     const currentUser = useSelector(selectCurrentUser) as IUser;
-    const { data: users } = useUsers({
+    const { data: users, refetch: refetchUsersPagination } = useUsersPagination(
+        {
+            accessToken: auth.access_token,
+            filterByEmail: filterEmail,
+            offset,
+        }
+    );
+
+    const { data: totalUsers, refetch: refetchTotalUsers } = useUsers({
         accessToken: auth.access_token,
+        filterByEmail: filterEmail,
     });
+
+    useEffect(() => {
+        refetchUsersPagination()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+
+        refetchTotalUsers()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [offset, filterEmail, refetchTotalUsers, refetchUsersPagination]);
+
+    const refetchFunction = () => {
+        refetchUsersPagination()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+
+        refetchTotalUsers()
+            .then()
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     const modalHandlerEdit = (user?: IUser) => {
         if (user) {
@@ -65,6 +107,7 @@ const Users = () => {
                             modalHandlerEdit();
                         }}
                         user={openEditModal.user}
+                        refresh={refetchFunction}
                     />
                     <DeleteUserModal
                         show={
@@ -74,12 +117,22 @@ const Users = () => {
                             modalHandlerDelete();
                         }}
                         user={openRemoveModal.user}
+                        refresh={refetchFunction}
                     />
                     <WelcomeArea
                         prev={[{ text: "Inicio", link: "/home" }]}
                         title="Usuarios"
                         wcText="Listado de Usuarios"
                     />
+
+                    <input
+                        placeholder="Filtrar por Email"
+                        style={{ marginBottom: 15, width: "25%" }}
+                        onChange={(e) => {
+                            setFilterEmail(e.target.value);
+                        }}
+                    ></input>
+
                     <Row gutters={10}>
                         <Table bordered={true}>
                             <thead>
@@ -140,6 +193,34 @@ const Users = () => {
                             </tbody>
                         </Table>
                     </Row>
+                    <div
+                        style={{
+                            textAlign: "center",
+                        }}
+                    >
+                        <Button
+                            disabled={offset === 0}
+                            color="primary"
+                            onClick={() => {
+                                setOffset((prev) => prev - 5);
+                            }}
+                            mr={25}
+                        >
+                            Anterior
+                        </Button>
+                        <Button
+                            disabled={
+                                totalUsers &&
+                                (offset + 5) / totalUsers?.length >= 1
+                            }
+                            color="primary"
+                            onClick={() => {
+                                setOffset((prev) => prev + 5);
+                            }}
+                        >
+                            Siguiente
+                        </Button>
+                    </div>
                 </ContentBody>
             </Content>
         </Layout>

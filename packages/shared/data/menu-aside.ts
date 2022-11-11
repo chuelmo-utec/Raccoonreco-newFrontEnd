@@ -6,6 +6,7 @@ import {
     Layers,
     Home,
     Smile,
+    FilePlus,
 } from "react-feather";
 
 const asideMenus = [
@@ -43,6 +44,12 @@ const asideMenus = [
             },
             {
                 id: 22,
+                label: "Alta de Multiples Socios",
+                url: "/partners/create/batch",
+                Icon: FilePlus,
+            },
+            {
+                id: 23,
                 label: "Alta de Socio",
                 url: "/partners/create",
                 Icon: FileText,

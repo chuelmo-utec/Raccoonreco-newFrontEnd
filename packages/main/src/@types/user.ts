@@ -30,3 +30,8 @@ export type IAuth = {
     access_token: string;
     refresh_token: string;
 };
+
+export type IUserPasswordForm = {
+    newPassword: string;
+    oldPassword: string;
+};

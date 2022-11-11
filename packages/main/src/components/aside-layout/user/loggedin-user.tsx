@@ -38,7 +38,7 @@ const LoggedinUser = ({ onClickChangePassword }: IProps) => {
             {
                 onSuccess: () => {
                     dispatch(logout());
-                    navigate("/");
+                    window.location.replace("/");
                 },
             }
         );

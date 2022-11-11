@@ -1,4 +1,4 @@
-import loginImage from "@doar/shared/images/raccoons.jpeg";
+import loginImage from "@doar/shared/images/raccoons.jpg";
 import SigninForm from "../../components/signin-form";
 import {
     StyledMedia,
@@ -14,7 +14,11 @@ const AuthContainer = () => {
             <StyledMediaBody>
                 <StyledImage>
                     <img
-                        style={{ borderRadius: "60px" }}
+                        style={{
+                            borderRadius: "60px",
+                            height: "80%",
+                            width: "80%",
+                        }}
                         src={loginImage}
                         alt="Login"
                     />

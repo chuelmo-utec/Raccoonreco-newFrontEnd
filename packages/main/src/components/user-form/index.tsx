@@ -190,6 +190,7 @@ const UserForm = () => {
                     >
                         <option value="Admin">Admin</option>
                         <option value="User">User</option>
+                        <option value="User">Guest</option>
                     </Select>
                 </FormGroup>
                 <Button

@@ -132,7 +132,7 @@ const LatestActivity = () => {
 
                 {response && response.proximity > 0.45 && (
                     <Alert color="danger" variant="outlined">
-                        Ingreso no autorizado
+                        No se encontro coincidencia...
                     </Alert>
                 )}
             </CardBody>

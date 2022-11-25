@@ -47,6 +47,7 @@ const InsertFace = ({ show, onClose, partner }: IProps) => {
     const [uploadedImage, setUploadedImage] = useState("");
     const [useWebcam, setUseWebcam] = useState(true);
     const accessToken = useSelector(selectAuth) as IAuth;
+    const [onSuccess, setOnSuccess] = useState(false);
 
     const convertBase64 = (file: Blob) => {
         return new Promise((resolve, reject) => {
@@ -91,12 +92,15 @@ const InsertFace = ({ show, onClose, partner }: IProps) => {
                             if (response) {
                                 console.log(response);
                             }
-                            onClose();
+                            /* onClose(); */
+                            setOnSuccess(true);
+                            setError(null);
                         },
                         onError: (err: AxiosError) => {
                             if (err.response && err.response.status === 401) {
                                 setConfirmationOpen(true);
                             } else {
+                                setOnSuccess(false);
                                 setError(
                                     "Ocurrió un error, asegurate de que haya un rostro."
                                 );
@@ -112,7 +116,15 @@ const InsertFace = ({ show, onClose, partner }: IProps) => {
     );
 
     return (
-        <Modal show={show} onClose={onClose} size={"xl"}>
+        <Modal
+            show={show}
+            onClose={() => {
+                setError(null);
+                setOnSuccess(false);
+                onClose();
+            }}
+            size={"xl"}
+        >
             {confirmationOpen && (
                 <ModalConfirmationPassword
                     onClose={() => setConfirmationOpen(false)}
@@ -120,13 +132,24 @@ const InsertFace = ({ show, onClose, partner }: IProps) => {
                 />
             )}
             <ModalBody>
-                <StyledClose onClose={onClose}>
+                <StyledClose
+                    onClose={() => {
+                        setError(null);
+                        setOnSuccess(false);
+                        onClose();
+                    }}
+                >
                     <X size={20} />
                 </StyledClose>
                 <StyledTitle>Insertar Rostro</StyledTitle>
                 {error && (
                     <Alert color="danger" variant="outlined">
                         {error}
+                    </Alert>
+                )}
+                {onSuccess && (
+                    <Alert color="success" variant="outlined">
+                        Rostro agregado correctamente!
                     </Alert>
                 )}
                 <CardBody

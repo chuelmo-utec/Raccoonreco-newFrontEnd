@@ -75,9 +75,15 @@ const Partners = () => {
 
     const modalEditPartnerHandler = (partner?: IPartner) => {
         if (partner) {
-            setOpenEditModal({ open: true, partner: partner });
+            setOpenEditModal({
+                open: true,
+                partner: partner,
+            });
         } else {
-            setOpenEditModal({ open: false, partner: undefined });
+            setOpenEditModal({
+                open: false,
+                partner: undefined,
+            });
         }
     };
 
@@ -155,6 +161,7 @@ const Partners = () => {
                         type={"number"}
                         onChange={(e) => {
                             setFilterPartnerId(parseInt(e.target.value));
+                            setOffset(0);
                         }}
                     ></input>
                     <Row gutters={10}>

@@ -1,4 +1,4 @@
-export type IUserRole = "Admin" | "User";
+export type IUserRole = "Admin" | "User" | "Guest";
 
 export type IUser = {
     id: number;

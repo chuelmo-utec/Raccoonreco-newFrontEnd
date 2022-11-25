@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { useState, useEffect, useRef } from "react";
 import cn from "clsx";
 import { NavbarAside } from "@doar/components";
 import { asideMenuData } from "@doar/shared/data";
-import { ISize } from "@doar/shared/types";
+import { IMenu, ISize } from "@doar/shared/types";
 import Header from "../header";
+import { useSelector } from "react-redux";
+import { selectAuth, selectCurrentUser } from "../../../redux/slices/auth";
 import Scrollbar from "../../../components/scrollbar";
 import AsideUser from "../../../components/aside-layout/user";
 import { useWindowSize } from "../../../hooks";
@@ -14,6 +18,8 @@ import {
     StyledBackdrop,
 } from "./style";
 import ChangePasswordModal from "../../../components/changepassword-modal/ChangePassword-Modal";
+import { IAuth, IUser } from "../../../../src/@types/user";
+import { Icon } from "react-feather";
 
 type TMaxText = "enter" | "leave";
 
@@ -23,12 +29,25 @@ interface IProps {
 }
 
 const Aisde = ({ layout, sidebarLayout }: IProps) => {
+    const auth = useSelector(selectAuth) as IAuth;
+    const currentUser = useSelector(selectCurrentUser) as IUser;
     const [minimize, setMinimize] = useState(layout === "minimize");
     const [maximize, setMaximize] = useState(false);
     const [show, setShow] = useState(false);
     const size: ISize = useWindowSize();
     const maximized = useRef(false);
     const mdMinimize = useRef(true);
+
+    const menuData = asideMenuData
+        .map((menu) => {
+            return {
+                ...menu,
+                submenu: menu.submenu.filter((a) =>
+                    a.Rol.includes(currentUser.rol)
+                ),
+            };
+        })
+        .filter((menu) => menu.Rol.includes(currentUser.rol));
 
     const minimizeHandler = () => {
         setMinimize((prev) => !prev);
@@ -123,7 +142,7 @@ const Aisde = ({ layout, sidebarLayout }: IProps) => {
                                     handleShowChangePasswordModal
                                 }
                             />
-                            <NavbarAside menus={asideMenuData} />
+                            <NavbarAside menus={menuData} />
                         </StyledBodyInner>
                     </Scrollbar>
                 </StyledBody>

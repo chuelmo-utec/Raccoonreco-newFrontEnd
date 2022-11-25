@@ -14,8 +14,8 @@ const Error505 = lazy(() => import("./pages/error-505"));
 // Classic Plus Pages
 const Home = lazy(() => import("./pages/classic-plus/Home"));
 
-const Partners = lazy(() => import("./pages/classic-plus/Partners"));
-const CreatePartner = lazy(() => import("./pages/classic-plus/CreatePartner"));
+const Partners = lazy(() => import("./pages/classic-plus/partners"));
+const CreatePartner = lazy(() => import("./pages/classic-plus/createPartner"));
 const CreatePartnerBatch = lazy(
     () => import("./pages/classic-plus/CreatePartnerBatch")
 );
@@ -23,7 +23,7 @@ const RecognizePartners = lazy(
     () => import("./pages/classic-plus/RecognizePartner")
 );
 
-const Users = lazy(() => import("./pages/classic-plus/Users"));
+const Users = lazy(() => import("./pages/classic-plus/users"));
 const CreateUser = lazy(() => import("./pages/classic-plus/CreateUser"));
 
 const PartnerDetail = lazy(() => import("./pages/classic-plus/PartnerDetail"));
@@ -43,7 +43,7 @@ const App = () => {
                             element={
                                 <PrivateRoute
                                     component={Home}
-                                    roles={["Admin", "User"]}
+                                    roles={["Admin", "User", "Guest"]}
                                 />
                             }
                         />
@@ -52,7 +52,7 @@ const App = () => {
                             element={
                                 <PrivateRoute
                                     component={Users}
-                                    roles={["Admin", "User"]}
+                                    roles={["Admin"]}
                                 />
                             }
                         />
@@ -61,7 +61,7 @@ const App = () => {
                             element={
                                 <PrivateRoute
                                     component={RecognizePartners}
-                                    roles={["Admin", "User"]}
+                                    roles={["Admin", "User", "Guest"]}
                                 />
                             }
                         />
@@ -98,7 +98,7 @@ const App = () => {
                             element={
                                 <PrivateRoute
                                     component={CreateUser}
-                                    roles={["Admin", "User"]}
+                                    roles={["Admin"]}
                                 />
                             }
                         />

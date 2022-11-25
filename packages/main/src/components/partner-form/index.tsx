@@ -30,6 +30,8 @@ const PartnerForm = () => {
         reset,
     } = useForm<IPartnerForm>();
     const [error, setErr] = useState<string | null>(null);
+
+    const [onSuccess, setOnSuccess] = useState(false);
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
     const accessToken = useSelector(selectAuth) as IAuth;
     const queryClient = useQueryClient();
@@ -61,17 +63,20 @@ const PartnerForm = () => {
                         );
                     }
                     setErr(null);
+                    setOnSuccess(true);
                     reset();
                 },
                 onError: (err: AxiosError) => {
                     if (err.response && err.response.status === 401) {
                         setConfirmationOpen(true);
                     } else if (err.response && err.response.status === 409) {
+                        setOnSuccess(false);
                         setErr("Ya existe un socio con ese numero de socio.");
                         setError("partnerId", {
                             message: "El numero de socio se encuentra en uso",
                         });
                     } else {
+                        setOnSuccess(false);
                         setErr("Ocurrió un error, intente más tarde.");
                     }
                 },
@@ -90,6 +95,11 @@ const PartnerForm = () => {
             {error && (
                 <Alert color="danger" variant="outlined">
                     {error}
+                </Alert>
+            )}
+            {onSuccess && (
+                <Alert color="success" variant="outlined">
+                    Socio creado correctamente!
                 </Alert>
             )}
             <form action="#" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -153,13 +163,20 @@ const PartnerForm = () => {
                         type="number"
                         id="partnerId"
                         placeholder="Número de Socio"
-                        feedbackText={errors?.name?.message}
+                        feedbackText={
+                            errors?.name?.message || errors?.partnerId?.message
+                        }
                         state={
                             hasKey(errors, "partnerId") ? "error" : "success"
                         }
                         showState={hasKey(errors, "partnerId")}
                         {...register("partnerId", {
                             required: "El número de socio es requerido",
+                            maxLength: {
+                                value: 9,
+                                message:
+                                    "El numero de socio debe ser menor a 9 caracteres",
+                            },
                         })}
                     />
                 </FormGroup>

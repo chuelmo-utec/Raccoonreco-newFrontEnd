@@ -31,6 +31,7 @@ const UserForm = () => {
         setError,
     } = useForm<IUserForm & { confirmPassword: string }>();
     const [error, setErr] = useState<string | null>(null);
+    const [onSuccess, setOnSuccess] = useState(false);
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
     const accessToken = useSelector(selectAuth) as IAuth;
 
@@ -50,7 +51,7 @@ const UserForm = () => {
             },
             {
                 onSuccess: (response: IUser) => {
-                    console.log("aca response", response);
+                    console.log("response", response);
                     if (response) {
                         queryClient.setQueryData<IUser[] | undefined>(
                             "useUsers",
@@ -63,6 +64,7 @@ const UserForm = () => {
                             }
                         );
                     }
+                    setOnSuccess(true);
                     setErr(null);
                     reset();
                 },
@@ -74,8 +76,10 @@ const UserForm = () => {
                         setError("email", {
                             message: "El correo ingresado ya esta en uso.",
                         });
+                        setOnSuccess(false);
                     } else {
                         setErr("Ocurrió un error, intente más tarde.");
+                        setOnSuccess(false);
                     }
                 },
             }
@@ -93,6 +97,11 @@ const UserForm = () => {
             {error && (
                 <Alert color="danger" variant="outlined">
                     {error}
+                </Alert>
+            )}
+            {onSuccess && (
+                <Alert color="success" variant="outlined">
+                    Usuario creado correctamente!
                 </Alert>
             )}
             <form action="#" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -167,6 +176,7 @@ const UserForm = () => {
                             required: "Debe verificar la contraseña",
                             validate: (value) => {
                                 const { password } = getValues();
+                                setOnSuccess(false);
                                 return (
                                     password === value ||
                                     "Las contraseñas no coinciden"

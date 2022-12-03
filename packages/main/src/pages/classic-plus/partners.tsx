@@ -19,19 +19,19 @@ import usePartnersPagination from "../../hooks/partners/usePartnersPagination";
 const Partners = () => {
     const auth = useSelector(selectAuth) as IAuth;
     const [offset, setOffset] = useState(0);
-    const [filterPartnerId, setFilterPartnerId] = useState<number | undefined>(
-        undefined
-    );
+    const [filterPartnerName, setFilterPartnerName] = useState<
+        string | undefined
+    >(undefined);
     const { data: partners, refetch: refetchPartnersPagination } =
         usePartnersPagination({
             accessToken: auth.access_token,
-            filterPartnerId: filterPartnerId,
+            filterPartnerName: filterPartnerName,
             offset,
         });
 
     const { data: totalPartners, refetch: refetchTotalPartners } = usePartners({
         accessToken: auth.access_token,
-        filterPartnerId: filterPartnerId,
+        filterPartnerName: filterPartnerName,
     });
 
     useEffect(() => {
@@ -45,7 +45,7 @@ const Partners = () => {
             .catch((err) => {
                 console.log(err);
             });
-    }, [offset, filterPartnerId]);
+    }, [offset, filterPartnerName]);
 
     const currentUser = useSelector(selectCurrentUser) as IUser;
 
@@ -156,14 +156,15 @@ const Partners = () => {
                         wcText="Listado de Socios"
                     />
                     <input
-                        placeholder="Filtrar por Numero de Socio"
+                        placeholder="Filtrar por Nombre de Socio"
                         style={{ marginBottom: 15, width: "25%" }}
-                        type={"number"}
+                        type={"text"}
                         onChange={(e) => {
-                            setFilterPartnerId(parseInt(e.target.value));
+                            setFilterPartnerName(e.target.value);
                             setOffset(0);
                         }}
                     ></input>
+
                     <Row gutters={10}>
                         <Table bordered={true}>
                             <thead>

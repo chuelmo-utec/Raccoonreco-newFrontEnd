@@ -130,6 +130,7 @@ const Users = () => {
                         style={{ marginBottom: 15, width: "25%" }}
                         onChange={(e) => {
                             setFilterEmail(e.target.value);
+                            setOffset(0);
                         }}
                     ></input>
 

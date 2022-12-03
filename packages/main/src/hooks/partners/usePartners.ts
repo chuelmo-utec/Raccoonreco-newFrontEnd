@@ -8,13 +8,13 @@ import { IAuth } from "../../@types/user";
 
 async function fetchPartners(args: {
     accessToken: string;
-    filterPartnerId?: number;
+    filterPartnerName?: string;
 }) {
-    const url = args.filterPartnerId
+    const url = args.filterPartnerName
         ? new URL(
               `${
                   process.env.REACT_APP_BACKEND_URL ?? ""
-              }/api/v1/partners?partnerId=${args.filterPartnerId}`
+              }/api/v1/partners?partnerName=${args.filterPartnerName}`
           )
         : new URL(`${process.env.REACT_APP_BACKEND_URL ?? ""}/api/v1/partners`);
 
@@ -31,7 +31,7 @@ async function fetchPartners(args: {
 
 function usePartners<TQueryData = IPartner[]>(args: {
     accessToken: string;
-    filterPartnerId?: number;
+    filterPartnerName?: string;
     queryOptions?: UseQueryOptions<IPartner[], AxiosError, TQueryData>;
 }) {
     const queryClient = useQueryClient();
@@ -44,7 +44,7 @@ function usePartners<TQueryData = IPartner[]>(args: {
         () =>
             fetchPartners({
                 accessToken: args.accessToken,
-                filterPartnerId: args.filterPartnerId,
+                filterPartnerName: args.filterPartnerName,
             }),
         {
             onError: (error: AxiosError) => {

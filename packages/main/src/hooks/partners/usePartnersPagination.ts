@@ -9,14 +9,14 @@ import { IAuth } from "../../@types/user";
 async function fetchPartnersPagination(args: {
     accessToken: string;
     offset: number;
-    filterPartnerId?: number;
+    filterPartnerName?: string;
 }) {
-    const url = args.filterPartnerId
+    const url = args.filterPartnerName
         ? new URL(
               `${
                   process.env.REACT_APP_BACKEND_URL ?? ""
-              }/api/v1/partners?offset=${args.offset}&partnerId=${
-                  args.filterPartnerId
+              }/api/v1/partners?offset=${args.offset}&partnerName=${
+                  args.filterPartnerName
               }`
           )
         : new URL(
@@ -39,7 +39,7 @@ async function fetchPartnersPagination(args: {
 function usePartnersPagination<TQueryData = IPartner[]>(args: {
     accessToken: string;
     offset: number;
-    filterPartnerId?: number;
+    filterPartnerName?: string;
     queryOptions?: UseQueryOptions<IPartner[], AxiosError, TQueryData>;
 }) {
     const queryClient = useQueryClient();
@@ -53,7 +53,7 @@ function usePartnersPagination<TQueryData = IPartner[]>(args: {
             fetchPartnersPagination({
                 accessToken: args.accessToken,
                 offset: args.offset,
-                filterPartnerId: args.filterPartnerId,
+                filterPartnerName: args.filterPartnerName,
             }),
         {
             onError: (error: AxiosError) => {
